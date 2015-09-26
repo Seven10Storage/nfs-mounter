@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.seven10.nfs_mounter.parameters.NfsMountParamsValidator;
+
 /**
  * @author kmm
  *		
@@ -32,6 +34,10 @@ public class AutoFsMgr
 		{
 			throw new IllegalArgumentException(".ctor(): afsTemplatePath cannot be null or empty");
 		}
+		if( afsTemplatePath == "/dev/null")
+		{
+			throw new IllegalArgumentException(".ctor(): templatePath cannot be /dev/null");
+		}
 		autoFsTemplatePath = afsTemplatePath;
 		mountPointLines = new ArrayList<String>();
 	}
@@ -44,6 +50,10 @@ public class AutoFsMgr
 		if(mpList == null)
 		{
 			throw new IllegalArgumentException(".setMountPointsList(): mpList must not be null");
+		}
+		for(String mp:mpList)
+		{
+			NfsMountParamsValidator.validateMountPoint(mp);
 		}
 		mountPointLines.clear();
 		mountPointLines.addAll(mpList);

@@ -4,7 +4,7 @@ public class NfsMountVolumesParameter
 {
 	private String mountPoint;
 	private String location;
-	private String shareName;
+	private String linuxShareName;
 	
 	public NfsMountVolumesParameter(String mountPoint, String location, String shareName)
 	{
@@ -13,14 +13,14 @@ public class NfsMountVolumesParameter
 		NfsMountParamsValidator.validateShareName(shareName);
 		this.mountPoint = mountPoint;
 		this.location = location;
-		this.shareName = shareName;
+		this.linuxShareName = shareName.replace("\\", "/"); //convert windows to linux if necessary
 	}
 	public String getMountPoint() { return mountPoint; }
 	public String getLocation() { return location; }
-	public String getLinuxShareName() { return shareName; }
+	public String getLinuxShareName() { return linuxShareName; }
 	public String getWindowsShareName()
 	{
-		// TODO Auto-generated method stub
-		return shareName.replace("/", "\\");
+		String rval = linuxShareName.replace("/", "\\");
+		return rval;
 	}
 }

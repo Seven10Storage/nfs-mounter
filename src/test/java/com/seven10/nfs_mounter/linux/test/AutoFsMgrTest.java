@@ -56,7 +56,7 @@ public class AutoFsMgrTest
 		// java generic types are stupid so we can't do things the proper way
 		// here
 		List<String> rval = new ArrayList<String>();
-		rval.add("sdasda");
+		rval.add("sda sda");
 		return rval;
 	}
 	

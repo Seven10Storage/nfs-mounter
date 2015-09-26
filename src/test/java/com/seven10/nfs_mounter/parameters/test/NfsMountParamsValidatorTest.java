@@ -70,37 +70,9 @@ public class NfsMountParamsValidatorTest
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateLocation_invalid_domain()
 	{
-		String location = "asdfasdf";
+		String location = "asdfa sdf";
 		NfsMountParamsValidator.validateLocation(location);
 	}
-	/**
-	* Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateLocation(java.lang.String)}.
-	*/
-	@Test(expected=IllegalArgumentException.class)
-	public void testValidateLocation_invalid_v4ip_tooShort()
-	{
-		String location = "192.168";
-		NfsMountParamsValidator.validateLocation(location);
-	}
-	/**
-	* Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateLocation(java.lang.String)}.
-	*/
-	@Test(expected=IllegalArgumentException.class)
-	public void testValidateLocation_invalid_v4ip_tooLong()
-	{
-		String location = "192.168.0.1.5";
-		NfsMountParamsValidator.validateLocation(location);
-	}
-	/**
-	* Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateLocation(java.lang.String)}.
-	*/
-	@Test(expected=IllegalArgumentException.class)
-	public void testValidateLocation_invalid_v4ip_outOfBounds()
-	{
-		String location = "300.168.0.1.5";
-		NfsMountParamsValidator.validateLocation(location);
-	}
-
 	 
 	/**
 	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateShareName(java.lang.String)}.

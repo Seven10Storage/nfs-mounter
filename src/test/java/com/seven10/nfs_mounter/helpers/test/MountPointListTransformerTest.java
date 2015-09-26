@@ -51,18 +51,13 @@ public class MountPointListTransformerTest
 	/**
 	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#addToList(java.lang.String, java.util.List)}.
 	 */
-	@Test
+	@Test(expected=IllegalArgumentException.class)
 	public void testAddToList_invalid_mountPoint()
 	{		
 		String mountPoint = mountPointInvalid;
 		List<String> mountPointList = new ArrayList<String>();
 		
-		int expectedSize = mountPointList.size();		
 		MountPointListTransformer.addToList(mountPoint, mountPointList);
-		int actualSize = mountPointList.size();
-		
-		assertFalse(mountPointList.contains(mountPoint)); // the item wasn't added		
-		assertEquals(expectedSize, actualSize);	// the size hasn't changed
 	}
 	/**
 	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#addToList(java.lang.String, java.util.List)}.

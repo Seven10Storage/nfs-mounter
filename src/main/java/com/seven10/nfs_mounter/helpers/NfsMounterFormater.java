@@ -49,7 +49,7 @@ public class NfsMounterFormater
 		{
 			throw new IllegalArgumentException(".formatMountAsUnc(): parameter must not be null");
 		}
-		String path = String.format("\\\\%s\\%s", parameter.getLocation(), parameter.getWindowsShareName());
+		String path = String.format("\\\\%s%s", parameter.getLocation(), parameter.getWindowsShareName());
 		return path;
 	}
 }

@@ -127,7 +127,7 @@ public class NfsMountVolumesParameterTest
 		
 		String actual = mvp.getLocation();
 		
-		assertEquals(mountPoint, actual);
+		assertEquals(expected, actual);
 	}
 	
 	@Test

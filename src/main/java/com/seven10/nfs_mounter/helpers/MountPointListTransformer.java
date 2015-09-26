@@ -56,7 +56,10 @@ public class MountPointListTransformer
 	 */
 	public static int getListIndex(String mountPoint, List<String> mountPointList)
 	{
-		NfsMountParamsValidator.validateMountPoint(mountPoint);
+		if(mountPoint == null || mountPoint.isEmpty())
+		{
+			throw new IllegalArgumentException(".validateMountPoint(): mountPoint cannot be null or empty");
+		}
 		if(mountPointList == null)
 		{
 			throw new IllegalArgumentException(".getListIndex(): mountPointList cannot be null");
