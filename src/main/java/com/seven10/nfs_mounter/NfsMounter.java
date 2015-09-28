@@ -8,6 +8,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import com.seven10.nfs_mounter.parameters.NfsMountVolumesParameter;
 import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
 
@@ -17,6 +20,7 @@ import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
  */
 public abstract class NfsMounter
 {
+	protected static final Logger m_logger = LogManager.getFormatterLogger(NfsMounter.class.getName());
 	protected NfsMounterFactorySettings settings;
 	
 	protected NfsMounter(NfsMounterFactorySettings factorySettings)
@@ -25,6 +29,7 @@ public abstract class NfsMounter
 		{
 			throw new IllegalArgumentException(".ctor(): factorySettings must not be null");
 		}
+		m_logger.debug(".ctor(): factory settings = %s", factorySettings.toString());
 		settings = factorySettings;
 	}
 	

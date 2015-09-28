@@ -137,10 +137,13 @@ public class AutoFsMgrTest
 	@Test
 	public void testSetMountPointsList_valid() throws IOException
 	{
-		AutoFsMgr autoFsMgr = createValidMgr("testSetMountPointsList");
+		AutoFsMgr autoFsMgr = createValidMgr("testSetMountPointsList");		
 		List<String> expected = createValidMountPointList();
 		autoFsMgr.setMountPointsList(expected);
+		autoFsMgr.updateFile();
+		
 		List<String> actual = autoFsMgr.getMountPointList();
+		
 		assertEquals(expected, actual);
 	}
 	/**

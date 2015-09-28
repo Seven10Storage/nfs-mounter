@@ -153,16 +153,16 @@ public class NfsMountVolumesParameterTest
 	{
 		String mountPoint = validMountPoint;
 		String location = validLocation;
-		String expectedLin = validLinuxShareName;
-		String expectedWin = validWindowsShareName;
+		String expectedLin = validLinuxShareName.replace("/", "\\");
+		String expectedWin = validWindowsShareName.replace("\\", "/");
 		
-		NfsMountVolumesParameter mvp1 = new NfsMountVolumesParameter(mountPoint, location, expectedLin);
-		NfsMountVolumesParameter mvp2 = new NfsMountVolumesParameter(mountPoint, location, expectedWin);
+		NfsMountVolumesParameter mvp1 = new NfsMountVolumesParameter(mountPoint, location, validLinuxShareName);
+		NfsMountVolumesParameter mvp2 = new NfsMountVolumesParameter(mountPoint, location, validWindowsShareName);
 		
 		String actualLin = mvp1.getWindowsShareName();
 		String actualWin = mvp2.getLinuxShareName();
 		
-		assertEquals(expectedLin.replace("\\", "/"), actualLin);
+		assertEquals(expectedLin, actualLin);
 		assertEquals(expectedWin, actualWin);
 	}
 	

@@ -3,6 +3,10 @@
  */
 package com.seven10.nfs_mounter.helpers;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.seven10.nfs_mounter.NfsMounter;
 import com.seven10.nfs_mounter.parameters.NfsMountParamsValidator;
 import com.seven10.nfs_mounter.parameters.NfsMountVolumesParameter;
 import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
@@ -13,6 +17,7 @@ import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
  */
 public class NfsMounterFormater
 {
+	private static final Logger m_logger = LogManager.getFormatterLogger(NfsMounter.class.getName());
 	/**
 	 * format single volume parameter into a line suitable for the Autofs template file
 	 * @param parameter The parameter object that contains the mount specific information
@@ -28,6 +33,7 @@ public class NfsMounterFormater
 		{
 			throw new IllegalArgumentException(".formatParameterForLine(): factorySettings must not be null");
 		}
+		m_logger.debug(".formatParamterForLine(): parameter='%s'", parameter.toString());
 		String rval = "";
 		String mountPoint = parameter.getMountPoint();
 		String location = parameter.getLocation();
@@ -40,6 +46,7 @@ public class NfsMounterFormater
 				factorySettings.getLinuxOptionsString(),
 									location,
 									shareName);		
+		m_logger.debug(".formatParamterForLine(): parameter formatted for autofs config line='%s'", rval);
 		return rval;
 	}
 	
@@ -49,7 +56,9 @@ public class NfsMounterFormater
 		{
 			throw new IllegalArgumentException(".formatMountAsUnc(): parameter must not be null");
 		}
+		m_logger.debug(".formatMountAsUnc(): parameter='%s'", parameter.toString());
 		String path = String.format("\\\\%s%s", parameter.getLocation(), parameter.getWindowsShareName());
+		m_logger.debug(".formatMountAsUnc(): parameter formatted as UNC address='%s'", path);
 		return path;
 	}
 }

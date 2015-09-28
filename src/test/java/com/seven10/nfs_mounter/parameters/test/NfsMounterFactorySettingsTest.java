@@ -38,12 +38,13 @@ public class NfsMounterFactorySettingsTest
 		NfsMounterFactorySettings settings = new NfsMounterFactorySettings();
 		boolean readOnly = settings.isFsReadOnly;
 		String expected = readOnly ? "ro" : "rw";
+		
 		String actual = settings.getLinuxOptionsString();
 		assertTrue(actual.contains(expected));
 		
 		// now change the value and see if its reflected in the string
 		settings.isFsReadOnly = ! readOnly;
-		expected = readOnly ? "ro" : "rw";
+		expected = settings.isFsReadOnly ? "ro" : "rw";
 		actual = settings.getLinuxOptionsString();
 		assertTrue(actual.contains(expected));
 	}
@@ -61,7 +62,7 @@ public class NfsMounterFactorySettingsTest
 		
 		// now change the value and see if its reflected in the string
 		settings.isRequestsRetriedIndefinitely = ! reqRetryIndef;
-		expected = reqRetryIndef ? "hard" : "soft";
+		expected = settings.isRequestsRetriedIndefinitely ? "hard" : "soft";
 		actual = settings.getLinuxOptionsString();
 		assertTrue(actual.contains(expected));
 	}
@@ -79,7 +80,7 @@ public class NfsMounterFactorySettingsTest
 		// now change the value and see if its reflected in the string
 		settings.isRequestInterruptable = ! isReqInt;
 		actual = settings.getLinuxOptionsString();
-		testInterruptableValue(isReqInt, actual);
+		testInterruptableValue(settings.isRequestInterruptable, actual);
 	}
 	/**
 	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings#getLinuxOptionsString()}.
@@ -95,7 +96,7 @@ public class NfsMounterFactorySettingsTest
 		
 		// now change the value and see if its reflected in the string
 		settings.readDataBlockSize = readDBSize * 2;
-		expected = String.format("rsize=%d", readDBSize);
+		expected = String.format("rsize=%d", settings.readDataBlockSize);
 		actual = settings.getLinuxOptionsString();
 		assertTrue(actual.contains(expected));
 	}
@@ -108,13 +109,16 @@ public class NfsMounterFactorySettingsTest
 		NfsMounterFactorySettings settings = new NfsMounterFactorySettings();
 		int writeDBSize = settings.writeDataBlockSize;
 		String expected = String.format("wsize=%d", writeDBSize);
+		
+		
 		String actual = settings.getLinuxOptionsString();
 		assertTrue(actual.contains(expected));
 		
 		// now change the value and see if its reflected in the string
 		settings.writeDataBlockSize = writeDBSize * 2;
-		expected = String.format("wsize=%d", writeDBSize);
+		expected = String.format("wsize=%d", settings.writeDataBlockSize);		
 		actual = settings.getLinuxOptionsString();
+		
 		assertTrue(actual.contains(expected));
 	}
 }

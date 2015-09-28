@@ -93,16 +93,18 @@ public class LinuxNfsMounterTest
 	 * Test method for {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.LinuxNfsMounter#mountVolumes(List)}.
 	 * @throws IOException 
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testMountVolumes_valid() throws IOException
 	{
 		LinuxNfsMounter mounter = createValidMounter();
 		List<NfsMountVolumesParameter> parameterObjects = createValidParametersList();
-		List<String> parameterStrings = createValidParametersStrings();
 		
 		List<File> actual = mounter.mountVolumes(parameterObjects);
+		
 		assertNotNull(actual);
-		Mockito.verify(afsMgr, Mockito.times(1)).setMountPointsList(parameterStrings);
+		
+		Mockito.verify(afsMgr, Mockito.times(1)).setMountPointsList(Mockito.anyList());
 		Mockito.verify(afsMgr, Mockito.times(1)).updateFile();
 	}
 	@Test
@@ -131,6 +133,7 @@ public class LinuxNfsMounterTest
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testUnMountVolumes_valid() throws FileNotFoundException, IOException
 	{
@@ -139,7 +142,7 @@ public class LinuxNfsMounterTest
 		
 		mounter.unMountVolumes(parameterStrings);
 
-		Mockito.verify(afsMgr, Mockito.times(1)).setMountPointsList(parameterStrings);
+		Mockito.verify(afsMgr, Mockito.times(1)).setMountPointsList(Mockito.anyList());
 		Mockito.verify(afsMgr, Mockito.times(1)).updateFile();
 	}
 	/**

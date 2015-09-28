@@ -5,12 +5,17 @@ package com.seven10.nfs_mounter.linux;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.seven10.nfs_mounter.parameters.NfsMountParamsValidator;
 
@@ -20,10 +25,19 @@ import com.seven10.nfs_mounter.parameters.NfsMountParamsValidator;
  */
 public class AutoFsMgr
 {
-	
+	private static final Logger m_logger = LogManager.getFormatterLogger(AutoFsMgr.class.getName());
 	String autoFsTemplatePath;
 	List<String> mountPointLines;
 	
+	private void createFileIfNeeded() throws IOException
+	{
+		File templateFile = new File(autoFsTemplatePath);
+		if(templateFile.exists() == false)
+		{
+			m_logger.debug(".createFileIfNeeded(): autofs template file path '%s' doesn't exist. Creating", autoFsTemplatePath);
+			templateFile.createNewFile();
+		}		
+	}
 	/**
 	 * constructs the autofs manager
 	 * @param afsTemplatePath
@@ -38,6 +52,7 @@ public class AutoFsMgr
 		{
 			throw new IllegalArgumentException(".ctor(): templatePath cannot be /dev/null");
 		}
+		m_logger.debug(".ctor(): autofs template file path = %s", afsTemplatePath);
 		autoFsTemplatePath = afsTemplatePath;
 		mountPointLines = new ArrayList<String>();
 	}
@@ -55,6 +70,7 @@ public class AutoFsMgr
 		{
 			NfsMountParamsValidator.validateMountPoint(mp);
 		}
+		m_logger.debug(".setMountPointsList(): setting mountPointList = '%s'", StringUtils.join(mpList, File.pathSeparator));
 		mountPointLines.clear();
 		mountPointLines.addAll(mpList);
 	}
@@ -68,6 +84,7 @@ public class AutoFsMgr
 	{
 		mountPointLines.clear();
 		String line;
+		createFileIfNeeded();
 		try (
 		    FileReader reader = new FileReader(autoFsTemplatePath);
 		    BufferedReader br = new BufferedReader(reader);
@@ -77,24 +94,30 @@ public class AutoFsMgr
 		    {
 		        if( line.isEmpty() == false)
 		        {
+		        	m_logger.debug(".getMountPointList(): adding line '%s' to mountPointList", line);
 		        	mountPointLines.add(line);
 		        }		        	
 		    }
 		}
+		m_logger.debug(".getMountPointList(): returning mountPointList='%s'", StringUtils.join(mountPointLines, File.pathSeparator));
 		return mountPointLines;
 	}
+	
 	/**
 	 * Updates the autoFS template file with the current list of mount point lines
 	 * @throws IOException Thrown if the file can't be open
 	 */
 	public void updateFile() throws IOException
 	{
+		m_logger.debug(".updateFile(): opening file '%s' for update", autoFsTemplatePath);
 		BufferedWriter writer = new BufferedWriter(new FileWriter(autoFsTemplatePath, false));
+		m_logger.debug(".updateFile(): updating with '%d' lines", mountPointLines.size());
 		for (String line : mountPointLines)
 		{
 			writer.write(line);
 			writer.newLine();
 		}
 		writer.close();
+		m_logger.debug(".updateFile(): update completed");
 	}
 }

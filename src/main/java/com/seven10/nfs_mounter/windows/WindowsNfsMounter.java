@@ -27,10 +27,12 @@ public class WindowsNfsMounter extends NfsMounter
 		ArrayList<File> rval = new ArrayList<File>();
 		for(NfsMountVolumesParameter parameter: parameterObject)
 		{
+			m_logger.debug(".mountVolumes(): attempting to mount volume '%s'", parameter.toString());
 			String path = NfsMounterFormater.formatMountAsUnc(parameter);
 			File file = new File(path);
 			if(file.exists())
 			{
+				m_logger.debug(".mountVolumes(): file '%s' exists, adding to list", parameter.toString());
 				rval.add(file);
 			}
 		}
@@ -44,6 +46,7 @@ public class WindowsNfsMounter extends NfsMounter
 		{
 			throw new IllegalArgumentException(".unMountVolumes(): mountPoints must not be null");
 		}
+		m_logger.debug(".unMountVolumes(): Windows nfs clients don't actually mount or unmount. doing nothing here");
 		// This function does nothing right now because we don't actually "mount" the folder.
 		return;
 		
@@ -57,7 +60,9 @@ public class WindowsNfsMounter extends NfsMounter
 			throw new IllegalArgumentException(".isMounted(): parameterObjects must not be null or empty");
 		}
 		File file = new File(mountPoint);
-		return file.exists();
+		boolean rval = file.exists();
+		m_logger.debug(".isMounted(): voulume mounted = %s", Boolean.toString(rval));
+		return rval;
 	}
 	
 }
