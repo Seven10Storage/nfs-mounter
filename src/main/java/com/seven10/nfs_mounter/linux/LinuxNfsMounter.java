@@ -13,7 +13,7 @@ import com.seven10.nfs_mounter.helpers.MountPointListTransformer;
 import com.seven10.nfs_mounter.helpers.NfsMounterFormater;
 import com.seven10.nfs_mounter.NfsMounter;
 import com.seven10.nfs_mounter.parameters.NfsMountParamsValidator;
-import com.seven10.nfs_mounter.parameters.NfsMountVolumesParameter;
+import com.seven10.nfs_mounter.parameters.NfsMountExportParameter;
 import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
 
 public class LinuxNfsMounter extends NfsMounter
@@ -21,16 +21,16 @@ public class LinuxNfsMounter extends NfsMounter
 	AutoFsMgr autoFsMgr;
 	
 	/**
-	 * creates a list of file handles for each mounted volume in the list
+	 * creates a list of file handles for each mounted export in the list
 	 * 
-	 * @param parameterObjects
-	 *            The list of parameter objects that provide the mount point
-	 * @return the array of file handles from the mounted volumes.
+	 * @param parameterObjects The list of parameter objects that provide the mount point
+	 *            
+	 * @return the array of file handles from the mounted exports.
 	 */
-	private List<File> getMountPointFileList(List<NfsMountVolumesParameter> parameterObjects)
+	private List<File> getMountPointFileList(List<NfsMountExportParameter> parameterObjects)
 	{
 		List<File> rval = new ArrayList<File>();
-		for (NfsMountVolumesParameter parameter : parameterObjects)
+		for (NfsMountExportParameter parameter : parameterObjects)
 		{
 			m_logger.debug(".getMountPointFileList(): processing mountPoint '%s'", parameter.toString());
 			String fullMountPoint = String.format("%s/%s", settings.linuxBaseMntDir, parameter.getMountPoint());
@@ -55,8 +55,9 @@ public class LinuxNfsMounter extends NfsMounter
 	/**
 	 * Constructor
 	 * 
-	 * @param factorySettings
-	 *            The factory settings object received from the factory
+	 * @param factorySettings The factory settings object received from the factory
+	 * @param afsMgr The afsMgr used to write to the template file
+	 *            
 	 */
 	public LinuxNfsMounter(NfsMounterFactorySettings factorySettings, AutoFsMgr afsMgr)
 	{
@@ -69,29 +70,29 @@ public class LinuxNfsMounter extends NfsMounter
 	}
 	
 	/**
-	 * function to mount the requested functions via autofs
+	 * function to mount the requested export via autofs
 	 * 
 	 * @param parameterObjects
 	 *            The list of parameter objects that provide information for the
 	 *            mount points
-	 * @return The array of file handles from the mounted volumes
-	 * @throws IOException
+	 * @return The array of file handles from the mounted exports
+	 * @throws IOException thrown if the template file can't be opened for writing
 	 */
 	@Override
-	public List<File> mountVolumes(List<NfsMountVolumesParameter> parameterObjects) throws IOException
+	public List<File> mountExports(List<NfsMountExportParameter> parameterObjects) throws IOException
 	{
 		if (parameterObjects == null)
 		{
-			throw new IllegalArgumentException(".mountVolumes(): parameterObjects must not be null");
+			throw new IllegalArgumentException(".mountExports(): parameterObjects must not be null");
 		}
 		Set<String> lines = autoFsMgr.getAutoFsEntryList();
-		for (NfsMountVolumesParameter parameter : parameterObjects)
+		for (NfsMountExportParameter parameter : parameterObjects)
 		{
-			m_logger.debug(".mountVolumes(): attempting to mount volume with parameters='%s'", parameter.toString());
+			m_logger.debug(".mountExports(): attempting to mount export with parameters='%s'", parameter.toString());
 			String newLine = NfsMounterFormater.formatParamterForLine(parameter, settings);
 			if (newLine.isEmpty() == false)
 			{
-				m_logger.debug(".mountVolumes(): adding mount line='%s'", newLine.toString());
+				m_logger.debug(".mountExports(): adding mount line='%s'", newLine.toString());
 				lines.add(newLine);
 			}
 		}
@@ -99,32 +100,50 @@ public class LinuxNfsMounter extends NfsMounter
 		autoFsMgr.updateFile();
 		return getMountPointFileList(parameterObjects);
 	}
+	/**
+	 * function to mount a single export via autofs
+	 * 
+	 * @param parameterObjects
+	 *            The list of parameter objects that provide information for the
+	 *            mount points
+	 * @return The array of file handles from the mounted exports
+	 * @throws IOException thrown if the template file can't be opened for writing
+	 */
+	@Override
+	public File mountExport(NfsMountExportParameter parameterObjects) throws IOException
+	{
+		List<NfsMountExportParameter> paramsList = new ArrayList<NfsMountExportParameter>(1);
+		paramsList.add(parameterObjects);
+		List<File> files = mountExports(paramsList);
+		File rval = (files.size() >= 1) ? files.get(0):new File("");
+		return rval;
+	}
 	
 	/**
-	 * function to remove the requested functions from the autofs template file.
+	 * function to remove the requested export from the autofs template file.
 	 * autofs will remove the mount points after the amount of time configured
 	 * in /etc/auto.master
 	 * 
 	 * @param mountPoints
 	 *            The list of mount point names to remove from the template file
-	 * @throws IOException
-	 * @throws FileNotFoundException
+	 * @throws IOException thrown if the template file can't be opened for writing
+	 * @throws FileNotFoundException thrown if the template file can't be found
 	 */
 	@Override
-	public void unMountVolumes(List<String> mountPoints) throws FileNotFoundException, IOException
+	public void unMountExports(List<String> mountPoints) throws FileNotFoundException, IOException
 	{
 		if (mountPoints == null)
 		{
-			throw new IllegalArgumentException(".unMountVolumes(): mountPoints must not be null");
+			throw new IllegalArgumentException(".unMountExports(): mountPoints must not be null");
 		}
 		Set<String> mountPointList = autoFsMgr.getAutoFsEntryList();
-		m_logger.debug(".unMountVolumes(): volumes to unmount='%s'", StringUtils.join(mountPointList, File.pathSeparator));
+		m_logger.debug(".unMountExports(): exports to unmount='%s'", StringUtils.join(mountPointList, File.pathSeparator));
 		
 		boolean listUpdated = false;
 		for (String mp : mountPoints)
 		{
 			NfsMountParamsValidator.validateMountPoint(mp);
-			m_logger.debug(".unMountVolumes(): unmounting volume '%s'", mp);
+			m_logger.debug(".unMountExports(): unmounting export '%s'", mp);
 			MountPointListTransformer.removeFromList(mp, mountPointList);
 			listUpdated = true;
 		}
@@ -133,6 +152,23 @@ public class LinuxNfsMounter extends NfsMounter
 			autoFsMgr.setAutoFsEntryList(mountPointList);
 			autoFsMgr.updateFile();
 		}
+	}
+	/**
+	 * function to remove the requested export from the autofs template file.
+	 * autofs will remove the mount points after the amount of time configured
+	 * in /etc/auto.master
+	 * 
+	 * @param mountPoints
+	 *            The list of mount point names to remove from the template file
+	 * @throws IOException Thrown if the template file cannot be opened
+	 * @throws FileNotFoundException thrown if the template file path cannot be found
+	 */
+	@Override
+	public void unMountExport(String mountPoints) throws FileNotFoundException, IOException
+	{
+		List<String> paramsList = new ArrayList<String>(1);
+		paramsList.add(mountPoints);
+		unMountExports(paramsList);
 	}
 	
 	@Override

@@ -8,7 +8,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.seven10.nfs_mounter.NfsMounter;
 import com.seven10.nfs_mounter.parameters.NfsMountParamsValidator;
-import com.seven10.nfs_mounter.parameters.NfsMountVolumesParameter;
+import com.seven10.nfs_mounter.parameters.NfsMountExportParameter;
 import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
 
 /**
@@ -19,11 +19,12 @@ public class NfsMounterFormater
 {
 	private static final Logger m_logger = LogManager.getFormatterLogger(NfsMounter.class.getName());
 	/**
-	 * format single volume parameter into a line suitable for the Autofs template file
+	 * format single export parameter into a line suitable for the Autofs template file
 	 * @param parameter The parameter object that contains the mount specific information
-	 * @return a string containing the mount parameters for this volume
+	 * @param factorySettings factory settings to use
+	 * @return a string containing the mount parameters for this export
 	 */
-	public static String formatParamterForLine(NfsMountVolumesParameter parameter, NfsMounterFactorySettings factorySettings)
+	public static String formatParamterForLine(NfsMountExportParameter parameter, NfsMounterFactorySettings factorySettings)
 	{
 		if( parameter == null)
 		{
@@ -37,11 +38,11 @@ public class NfsMounterFormater
 		String rval = "";
 		String mountPoint = parameter.getMountPoint();
 		String location = parameter.getLocation();
-		String shareName = parameter.getLinuxShareName();
+		String shareName = parameter.getLinuxExportName();
 		
 		NfsMountParamsValidator.validateMountPoint(mountPoint);
 		NfsMountParamsValidator.validateLocation(location);
-		NfsMountParamsValidator.validateShareName(shareName);
+		NfsMountParamsValidator.validateExportName(shareName);
 		rval = String.format("%s %s %s:%s", mountPoint,
 				factorySettings.getLinuxOptionsString(),
 									location,
@@ -50,14 +51,14 @@ public class NfsMounterFormater
 		return rval;
 	}
 	
-	public static String formatMountAsUnc(NfsMountVolumesParameter parameter)
+	public static String formatMountAsUnc(NfsMountExportParameter parameter)
 	{
 		if( parameter == null)
 		{
 			throw new IllegalArgumentException(".formatMountAsUnc(): parameter must not be null");
 		}
 		m_logger.debug(".formatMountAsUnc(): parameter='%s'", parameter.toString());
-		String path = String.format("\\\\%s%s", parameter.getLocation(), parameter.getWindowsShareName());
+		String path = String.format("\\\\%s%s", parameter.getLocation(), parameter.getWindowsExportName());
 		m_logger.debug(".formatMountAsUnc(): parameter formatted as UNC address='%s'", path);
 		return path;
 	}

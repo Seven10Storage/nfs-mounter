@@ -81,7 +81,7 @@ public class AutoFsMgrTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#AutoFsMgr(java.lang.String)}
+	 * {@link com.seven10.nfs_mounter.linux.AutoFsMgr#AutoFsMgr(java.lang.String)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -94,7 +94,7 @@ public class AutoFsMgrTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#AutoFsMgr(java.lang.String)}
+	 * {@link com.seven10.nfs_mounter.linux.AutoFsMgr#AutoFsMgr(java.lang.String)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -109,7 +109,7 @@ public class AutoFsMgrTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#AutoFsMgr(java.lang.String)}
+	 * {@link com.seven10.nfs_mounter.linux.AutoFsMgr#AutoFsMgr(java.lang.String)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -124,7 +124,7 @@ public class AutoFsMgrTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#AutoFsMgr(java.lang.String)}
+	 * {@link com.seven10.nfs_mounter.linux.AutoFsMgr#AutoFsMgr(java.lang.String)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -139,7 +139,7 @@ public class AutoFsMgrTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#setAutoFsEntryList(Set)}
+	 * {@link com.seven10.nfs_mounter.linux.AutoFsMgr#setAutoFsEntryList(Set)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -162,7 +162,7 @@ public class AutoFsMgrTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#setAutoFsEntryList(Set)}
+	 * {@link com.seven10.nfs_mounter.linux.AutoFsMgr#setAutoFsEntryList(Set)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -177,7 +177,7 @@ public class AutoFsMgrTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#setAutoFsEntryList(Set)}
+	 * {@link com.seven10.nfs_mounter.linux.AutoFsMgr#setAutoFsEntryList(Set)}
 	 * . An empty list is ok, so no exception is expected.
 	 * 
 	 * @throws IOException
@@ -196,7 +196,7 @@ public class AutoFsMgrTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#setAutoFsEntryList(Set)}
+	 * {@link com.seven10.nfs_mounter.linux.AutoFsMgr#setAutoFsEntryList(Set)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -211,7 +211,7 @@ public class AutoFsMgrTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#getAutoFsEntryList()}
+	 * {@link com.seven10.nfs_mounter.linux.AutoFsMgr#getAutoFsEntryList()}
 	 * .
 	 * 
 	 * @throws IOException
@@ -229,7 +229,7 @@ public class AutoFsMgrTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#updateFile()}
+	 * {@link com.seven10.nfs_mounter.linux.AutoFsMgr#updateFile()}
 	 * .
 	 * 
 	 * @throws IOException

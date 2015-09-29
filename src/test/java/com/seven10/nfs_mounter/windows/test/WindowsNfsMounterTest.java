@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.Test;
-import com.seven10.nfs_mounter.parameters.NfsMountVolumesParameter;
+import com.seven10.nfs_mounter.parameters.NfsMountExportParameter;
 import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
 import com.seven10.nfs_mounter.windows.WindowsNfsMounter;
 
@@ -31,10 +31,10 @@ public class WindowsNfsMounterTest
 		return mounter;
 	}
 	
-	private List<NfsMountVolumesParameter> createValidParametersList()
+	private List<NfsMountExportParameter> createValidParametersList()
 	{
-		List<NfsMountVolumesParameter> rval = new ArrayList<NfsMountVolumesParameter>();
-		rval.add(new NfsMountVolumesParameter("mnt", "192.168.21.60", "/ifs/data/Demo"));
+		List<NfsMountExportParameter> rval = new ArrayList<NfsMountExportParameter>();
+		rval.add(new NfsMountExportParameter("mnt", "192.168.21.60", "/ifs/data/Demo"));
 		return rval;
 	}
 	
@@ -64,7 +64,7 @@ public class WindowsNfsMounterTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.windows.WindowsNfsMounter#mountVolumes(java.util.List)}
+	 * {@link com.seven10.nfs_mounter.windows.WindowsNfsMounter#mountExports(java.util.List)}
 	 * .
 	 */
 	@Test
@@ -73,9 +73,9 @@ public class WindowsNfsMounterTest
 		if (SystemUtils.IS_OS_WINDOWS)
 		{
 			WindowsNfsMounter mounter = createValidMounter();
-			List<NfsMountVolumesParameter> parameterObjects = createValidParametersList();
+			List<NfsMountExportParameter> parameterObjects = createValidParametersList();
 			
-			List<File> actual = mounter.mountVolumes(parameterObjects);
+			List<File> actual = mounter.mountExports(parameterObjects);
 			
 			assertNotNull(actual);
 			assertEquals(parameterObjects.size(), actual.size());
@@ -88,23 +88,23 @@ public class WindowsNfsMounterTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.windows.WindowsNfsMounter#mountVolumes(java.util.List)}
+	 * {@link com.seven10.nfs_mounter.windows.WindowsNfsMounter#mountExports(java.util.List)}
 	 * .
 	 */
 	@Test
 	public void testMountVolumes_invalid()
 	{
 		WindowsNfsMounter mounter = createValidMounter();
-		List<NfsMountVolumesParameter> parameterObjects = createValidParametersList();
+		List<NfsMountExportParameter> parameterObjects = createValidParametersList();
 		
-		List<File> actual = mounter.mountVolumes(parameterObjects);
+		List<File> actual = mounter.mountExports(parameterObjects);
 		assertNotNull(actual);
 		assertEquals(0, actual.size());
 	}
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.windows.WindowsNfsMounter#unMountVolumes(java.util.List)}
+	 * {@link com.seven10.nfs_mounter.windows.WindowsNfsMounter#unMountExports(java.util.List)}
 	 * . Testing for a null parameter so the behavior is consistent.
 	 */
 	@Test
@@ -114,12 +114,12 @@ public class WindowsNfsMounterTest
 		List<String> mps = new ArrayList<String>();
 		mps.add(validMountUnc);
 		
-		mounter.unMountVolumes(mps); // there should be no error
+		mounter.unMountExports(mps); // there should be no error
 	}
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.windows.WindowsNfsMounter#unMountVolumes(java.util.List)}
+	 * {@link com.seven10.nfs_mounter.windows.WindowsNfsMounter#unMountExports(java.util.List)}
 	 * . Testing for a null parameter so the behavior is consistent.
 	 */
 	@Test(expected = IllegalArgumentException.class)
@@ -128,7 +128,7 @@ public class WindowsNfsMounterTest
 		WindowsNfsMounter mounter = createValidMounter();
 		List<String> parameterObjects = null;
 		
-		mounter.unMountVolumes(parameterObjects);
+		mounter.unMountExports(parameterObjects);
 	}
 	
 	/**

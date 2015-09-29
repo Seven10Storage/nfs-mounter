@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="debug" monitorInterval="5">
 <Appenders>
-    <File name="Datamover-LogFile" filename="datamover.log">
+    <File name="Nfs-Mounter-LogFile" filename="Nfs-Mounter.log">
         <PatternLayout pattern="%d{MM-dd HH:mm:ss.SSS} [%t] %-5level %c%msg%n"/>
     </File>
     <Console name="Console" target="SYSTEM_OUT">
@@ -12,10 +12,10 @@
 <Loggers>
     <Logger name="com.seven10" level="trace" additivity="false">
         <AppenderRef ref="Console" level = "debug"/>
-        <AppenderRef ref="Datamover-LogFile" level="trace"></AppenderRef>
+        <AppenderRef ref="Nfs-Mounter-LogFile" level="trace"></AppenderRef>
     </Logger>
     <Logger name="com.seven10.queue.FIFOWorkQueue" level="debug" additivity="false">
-        <AppenderRef ref="Datamover-LogFile" level="debug"></AppenderRef>
+        <AppenderRef ref="Nfs-Mounter-LogFile" level="debug"></AppenderRef>
     </Logger>    
     <Root level="warn">
         <AppenderRef ref="Console"/>

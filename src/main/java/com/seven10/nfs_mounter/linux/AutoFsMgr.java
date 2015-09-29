@@ -40,7 +40,7 @@ public class AutoFsMgr
 	}
 	/**
 	 * constructs the autofs manager
-	 * @param afsTemplatePath
+	 * @param afsTemplatePath the path where the template file resides. You must have write privilages to this file
 	 */
 	public AutoFsMgr(String afsTemplatePath)
 	{
@@ -58,8 +58,8 @@ public class AutoFsMgr
 	}
 	/**
 	 * sets the current mount point list to the contents of the string
-	 * @param mpList
-	 */
+	 * @param mpList list of entries to be added to the autofs template file
+	 */ 
 	public void setAutoFsEntryList(Set<String> mpList)
 	{
 		if(mpList == null)
@@ -77,8 +77,8 @@ public class AutoFsMgr
 	/**
 	 * gets the list of all entries currently in the autoFS template file
 	 * @return the list of mountpoint entries
-	 * @throws FileNotFoundException if the template
-	 * @throws IOException
+	 * @throws FileNotFoundException if the template file can't be found
+	 * @throws IOException if the template file can't be accessed
 	 */
 	public Set<String> getAutoFsEntryList() throws FileNotFoundException, IOException
 	{

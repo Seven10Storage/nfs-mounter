@@ -31,7 +31,7 @@ public class NfsMounterFactorySettingsTest
 	}
 	
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings#getLinuxOptionsString()}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings#getLinuxOptionsString()}.
 	 */
 	@Test
 	public void testGetOptionsString_fsReadOnly()
@@ -48,10 +48,10 @@ public class NfsMounterFactorySettingsTest
 		expected = settings.isFsReadOnly ? "ro" : "rw";
 		actual = settings.getLinuxOptionsString();
 		assertTrue(actual.contains(expected));
-		NfsMountParamsValidator.validateShareOptions(actual);
+		NfsMountParamsValidator.validateExportOptions(actual);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings#getLinuxOptionsString()}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings#getLinuxOptionsString()}.
 	 */
 	@Test
 	public void testGetOptionsString_requestsRetriedIndefinitely()
@@ -67,10 +67,10 @@ public class NfsMounterFactorySettingsTest
 		expected = settings.isRequestsRetriedIndefinitely ? "hard" : "soft";
 		actual = settings.getLinuxOptionsString();
 		assertTrue(actual.contains(expected));
-		NfsMountParamsValidator.validateShareOptions(actual);
+		NfsMountParamsValidator.validateExportOptions(actual);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings#getLinuxOptionsString()}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings#getLinuxOptionsString()}.
 	 */
 	@Test
 	public void testGetOptionsString_isRequestInterruptable()
@@ -84,10 +84,10 @@ public class NfsMounterFactorySettingsTest
 		settings.isRequestInterruptable = ! isReqInt;
 		actual = settings.getLinuxOptionsString();
 		testInterruptableValue(settings.isRequestInterruptable, actual);
-		NfsMountParamsValidator.validateShareOptions(actual);
+		NfsMountParamsValidator.validateExportOptions(actual);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings#getLinuxOptionsString()}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings#getLinuxOptionsString()}.
 	 */
 	@Test
 	public void testGetOptionsString_readDataBlockSize()
@@ -103,10 +103,10 @@ public class NfsMounterFactorySettingsTest
 		expected = String.format("rsize=%d", settings.readDataBlockSize);
 		actual = settings.getLinuxOptionsString();
 		assertTrue(actual.contains(expected));
-		NfsMountParamsValidator.validateShareOptions(actual);
+		NfsMountParamsValidator.validateExportOptions(actual);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings#getLinuxOptionsString()}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings#getLinuxOptionsString()}.
 	 */
 	@Test
 	public void testGetOptionsString_writeDataBlockSize()
@@ -125,6 +125,6 @@ public class NfsMounterFactorySettingsTest
 		actual = settings.getLinuxOptionsString();
 		
 		assertTrue(actual.contains(expected));
-		NfsMountParamsValidator.validateShareOptions(actual);
+		NfsMountParamsValidator.validateExportOptions(actual);
 	}
 }

@@ -15,7 +15,7 @@ public class NfsMountParamsValidatorTest
 {
 	
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateMountPoint(java.lang.String)}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMountParamsValidator#validateMountPoint(java.lang.String)}.
 	 */
 	@Test
 	public void testValidateMountPoint_valid()
@@ -24,7 +24,7 @@ public class NfsMountParamsValidatorTest
 		NfsMountParamsValidator.validateMountPoint(mountPoint);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateMountPoint(java.lang.String)}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMountParamsValidator#validateMountPoint(java.lang.String)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateMountPoint_invalid()
@@ -33,7 +33,7 @@ public class NfsMountParamsValidatorTest
 		NfsMountParamsValidator.validateMountPoint(mountPoint);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateMountPoint(java.lang.String)}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMountParamsValidator#validateMountPoint(java.lang.String)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateMountPoint_empty()
@@ -42,7 +42,7 @@ public class NfsMountParamsValidatorTest
 		NfsMountParamsValidator.validateMountPoint(mountPoint);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateMountPoint(java.lang.String)}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMountParamsValidator#validateMountPoint(java.lang.String)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateMountPoint_null()
@@ -52,7 +52,7 @@ public class NfsMountParamsValidatorTest
 	}
 	
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateLocation(java.lang.String)}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMountParamsValidator#validateLocation(java.lang.String)}.
 	 */
 	@Test
 	public void testValidateLocation_valid()
@@ -65,7 +65,7 @@ public class NfsMountParamsValidatorTest
 		NfsMountParamsValidator.validateLocation(location);
 	}
 	/**
-	* Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateLocation(java.lang.String)}.
+	* Test method for {@link com.seven10.nfs_mounter.parameters.NfsMountParamsValidator#validateLocation(java.lang.String)}.
 	*/
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateLocation_invalid_domain()
@@ -75,69 +75,69 @@ public class NfsMountParamsValidatorTest
 	}
 	 
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateShareName(java.lang.String)}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMountParamsValidator#validateExportName(java.lang.String)}.
 	 */
 	@Test
-	public void testValidateShareName_valid()
+	public void testValidateExportName_valid()
 	{
-		String shareName = "/myShare";
-		NfsMountParamsValidator.validateShareName(shareName);
+		String exportName = "/myExport";
+		NfsMountParamsValidator.validateExportName(exportName);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateShareName(java.lang.String)}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMountParamsValidator#validateExportName(java.lang.String)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void testValidateShareName_invalid()
+	public void testValidateExportName_invalid()
 	{
-		String shareName = "inv@lidShareName#?";
-		NfsMountParamsValidator.validateShareName(shareName);
+		String exportName = "inv@lidExportName#?";
+		NfsMountParamsValidator.validateExportName(exportName);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateShareName(java.lang.String)}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMountParamsValidator#validateExportName(java.lang.String)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void testValidateShareName_empty()
+	public void testValidateExportName_empty()
 	{
-		String shareName = "";
-		NfsMountParamsValidator.validateShareName(shareName);
+		String exportName = "";
+		NfsMountParamsValidator.validateExportName(exportName);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMountParamsValidator#validateShareName(java.lang.String)}.
+	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMountParamsValidator#validateExportName(java.lang.String)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void testValidateShareName_null()
+	public void testValidateExportName_null()
 	{
-		String shareName = null;
-		NfsMountParamsValidator.validateShareName(shareName);
+		String exportName = null;
+		NfsMountParamsValidator.validateExportName(exportName);
 	}
 	
 	/**
 	 * validates if the mountPoint provided is acceptable and of the form
-	 * <mountPoint> -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm <location>:<share-name> 
+	 * <mountPoint> -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm <location>:<export-name> 
 	 */
 	@Test
 	public void testValidateAutoFsEntry_valid()
 	{
-		// <mountPoint> -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm <location>:<share-name>
-		String testString = "mnt -ro,hard,intr,rsize=3,wsize=4 test.location:/share/with/folders";
+		// <mountPoint> -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm <location>:<export-name>
+		String testString = "mnt -ro,hard,intr,rsize=3,wsize=4 test.location:/export/with/folders";
 		NfsMountParamsValidator.validateAutoFsEntry(testString);
 		
-		testString = "mnt -rw,soft,rsize=344444,wsize=4 test.location:/share";
+		testString = "mnt -rw,soft,rsize=344444,wsize=4 test.location:/export";
 		NfsMountParamsValidator.validateAutoFsEntry(testString);		
 	}
 	/**
 	 * validates if the mountPoint provided is acceptable and of the form
-	 * <mountPoint> -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm <location>:<share-name> 
+	 * <mountPoint> -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm <location>:<export-name> 
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateAutoFsEntry_invalidString()
 	{
-		String testString = "/mnt -rw,soft,rsize=344444,wsize=4test.location:/share";
+		String testString = "/mnt -rw,soft,rsize=344444,wsize=4test.location:/export";
 		NfsMountParamsValidator.validateAutoFsEntry(testString);
 	}
 	/**
 	 * validates if the mountPoint provided is acceptable and of the form
-	 * <mountPoint> -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm <location>:<share-name> 
+	 * <mountPoint> -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm <location>:<export-name> 
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateAutoFsEntry_emptyString()
@@ -147,7 +147,7 @@ public class NfsMountParamsValidatorTest
 	}
 	/**
 	 * validates if the mountPoint provided is acceptable and of the form
-	 * <mountPoint> -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm <location>:<share-name> 
+	 * <mountPoint> -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm <location>:<export-name> 
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testValidateAutoFsEntry_nullString()
@@ -157,197 +157,197 @@ public class NfsMountParamsValidatorTest
 	}
 	
 	/**
-	 * This validates that a shareResource is in the form
-	 * <location>:<share-name>
+	 * This validates that a exportResource is in the form
+	 * <location>:<export-name>
 	 */
 	@Test
-	public void testValidateShareResource_valid()
+	public void testValidateExportResource_valid()
 	{
 		String testString = "valid.address:/valid/path";
-		NfsMountParamsValidator.validateShareResource(testString);
+		NfsMountParamsValidator.validateExportResource(testString);
 	}
 	/**
-	 * This validates that a shareResource is in the form
-	 * <location>:<share-name>
+	 * This validates that a exportResource is in the form
+	 * <location>:<export-name>
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void testValidateShareResource_invalid()
+	public void testValidateExportResource_invalid()
 	{
 		String testString = "valid.address$/valid/path";
-		NfsMountParamsValidator.validateShareResource(testString);
+		NfsMountParamsValidator.validateExportResource(testString);
 	}
 	/**
-	 * This validates that a shareResource is in the form
-	 * <location>:<share-name>
+	 * This validates that a exportResource is in the form
+	 * <location>:<export-name>
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void testValidateShareResource_emptyParam()
+	public void testValidateExportResource_emptyParam()
 	{
 		String testString = "";
-		NfsMountParamsValidator.validateShareResource(testString);
+		NfsMountParamsValidator.validateExportResource(testString);
 	}
 	/**
-	 * This validates that a shareResource is in the form
-	 * <location>:<share-name>
+	 * This validates that a exportResource is in the form
+	 * <location>:<export-name>
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void testValidateShareResource_nullParam()
+	public void testValidateExportResource_nullParam()
 	{
 		String testString = null;
-		NfsMountParamsValidator.validateShareResource(testString);
+		NfsMountParamsValidator.validateExportResource(testString);
 	}
 	
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test
-	public void validateShareOptions_valid()
+	public void validateExportOptions_valid()
 	{
 		String testString = "-ro,hard,intr,rsize=1,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 		testString = "-rw,hard,intr,rsize=1,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 		testString = "-rw,soft,intr,rsize=1,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 		testString = "-rw,hard,rsize=1,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 		testString = "-rw,soft,rsize=1,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 		testString = "-rw,soft,rsize=99999,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 		testString = "-rw,soft,rsize=1,wsize=85814";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_invalid_perm()
+	public void validateExportOptions_invalid_perm()
 	{
 		String testString = "-pl,hard,intr,rsize=1,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_missing_perm()
+	public void validateExportOptions_missing_perm()
 	{
 		String testString = "-hard,intr,rsize=1,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_invalid_resetType()
+	public void validateExportOptions_invalid_resetType()
 	{
 		String testString = "-ro,poo,intr,rsize=1,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_missing_resetType()
+	public void validateExportOptions_missing_resetType()
 	{
 		String testString = "-ro,intr,rsize=1,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_invalid_interruptable()
+	public void validateExportOptions_invalid_interruptable()
 	{
 		String testString = "-ro,hard,gurgle,rsize=1,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_invalid_rsize_name()
+	public void validateExportOptions_invalid_rsize_name()
 	{
 		String testString = "-ro,hard,intr,rsizzlee=1,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_invalid_rsize_value()
+	public void validateExportOptions_invalid_rsize_value()
 	{
 		String testString = "-ro,hard,intr,rsize=aasd,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_empty_rsize_value()
+	public void validateExportOptions_empty_rsize_value()
 	{
 		String testString = "-ro,hard,intr,rsize=,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_missing_rsize()
+	public void validateExportOptions_missing_rsize()
 	{
 		String testString = "-ro,hard,intr,wsize=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_invalid_wsize_name()
+	public void validateExportOptions_invalid_wsize_name()
 	{
 		String testString = "-ro,hard,intr,rsize=,wsizzle=2";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_invalid_wsize_value()
+	public void validateExportOptions_invalid_wsize_value()
 	{
 		String testString = "-ro,hard,intr,rsize=,wsize=aaaa";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_empty_wsize_value()
+	public void validateExportOptions_empty_wsize_value()
 	{
 		String testString = "-ro,hard,intr,rsize=,wsize=";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
 	 */
 	@Test(expected=IllegalArgumentException.class)
-	public void validateShareOptions_missing_wsize()
+	public void validateExportOptions_missing_wsize()
 	{
 		String testString = "-ro,hard,intr,rsize=";
-		NfsMountParamsValidator.validateShareOptions(testString);
+		NfsMountParamsValidator.validateExportOptions(testString);
 	}
 }

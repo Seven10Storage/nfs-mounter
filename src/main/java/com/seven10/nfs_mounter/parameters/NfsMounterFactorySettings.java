@@ -47,12 +47,12 @@ public class NfsMounterFactorySettings
 	public int writeDataBlockSize = 8192;
 	
 	/**
-	 * Linux mounts the NFS volume to a special folder
+	 * Linux mounts the NFS export to a special folder
 	 */
 	public String linuxBaseMntDir = "/mnt/hydra";
 	
 	/**
-	 * Linux autofs uses a special template file to mount volumes. We create
+	 * Linux autofs uses a special template file to mount exports. We create
 	 * this file on the fly. This parameter is the location of the template
 	 * file.
 	 */
@@ -62,7 +62,7 @@ public class NfsMounterFactorySettings
 	 * Generates a string to be passed into the linux mount command containing
 	 * relevant settings
 	 * 
-	 * @return
+	 * @return the option settings in the appropriate string format
 	 */
 	public String getLinuxOptionsString()
 	{

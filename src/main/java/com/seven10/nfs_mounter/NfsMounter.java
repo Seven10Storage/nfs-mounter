@@ -11,7 +11,7 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.seven10.nfs_mounter.parameters.NfsMountVolumesParameter;
+import com.seven10.nfs_mounter.parameters.NfsMountExportParameter;
 import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
 
 /**
@@ -33,7 +33,9 @@ public abstract class NfsMounter
 		settings = factorySettings;
 	}
 	
-	public abstract List<File> mountVolumes(List<NfsMountVolumesParameter> parameterObject) throws IOException;
-	public abstract void unMountVolumes(List<String> mountPoints) throws FileNotFoundException, IOException;
+	public abstract List<File> mountExports(List<NfsMountExportParameter> parameterObject) throws IOException;
+	public abstract File mountExport(NfsMountExportParameter parameterObject) throws IOException;
+	public abstract void unMountExports(List<String> mountPoints) throws FileNotFoundException, IOException;
+	public abstract void unMountExport(String mountPoint) throws FileNotFoundException, IOException;
 	public abstract boolean isMounted(String mountPoint) throws FileNotFoundException, IOException;	
 }

@@ -6,7 +6,7 @@ import org.apache.commons.validator.routines.InetAddressValidator;
 
 public class NfsMountParamsValidator
 {
-	private static final Pattern shareNamePattern;
+	private static final Pattern exportNamePattern;
 	private static final Pattern hostNamePattern;
 	private static final Pattern mountPattern;
 	private static final Pattern afsEntryPattern;
@@ -16,16 +16,16 @@ public class NfsMountParamsValidator
 		String hostNameRegEx = "^[a-zA-Z0-9]+(\\.?[a-zA-Z0-9]+(\\-[a-zA-Z0-9])*)*(\\:?\\d+)*$";
 		String mountRegEx = "^[a-zA-Z0-9_.]+$";
 		String afsEntryRegEx = "^\\-(ro|rw),(soft|hard),(intr,|)rsize=\\d+,wsize=\\d+$";
-		shareNamePattern = Pattern.compile(pathRegex);
+		exportNamePattern = Pattern.compile(pathRegex);
 		hostNamePattern = Pattern.compile(hostNameRegEx);
 		mountPattern = Pattern.compile(mountRegEx);
 		afsEntryPattern = Pattern.compile(afsEntryRegEx);
 	}
 	/**
 	 * validates if the mountPoint provided is acceptable and of the form
-	 * /<mount-name>
-	 * @param mountPoint
-	 * @throws IllegalArgumentException
+	 * &lt;mount-name&gt;
+	 * @param mountPoint the mountPoint string to validate
+	 * @throws IllegalArgumentException if the mountPoint parameter is invalid
 	 */
 	public static void validateMountPoint(String mountPoint) throws IllegalArgumentException
 	{
@@ -39,7 +39,7 @@ public class NfsMountParamsValidator
 					String.format(".validateMountPoint(): '%s' does not appear to be a valid mount point", mountPoint));
 		}
 	}
-	public static void validateLocation(String location)
+	public static void validateLocation(String location) throws IllegalArgumentException
 	{
 		if(location == null || location.isEmpty())
 		{
@@ -53,23 +53,23 @@ public class NfsMountParamsValidator
 		}
 	}
 	
-	public static void validateShareName(String shareName)
+	public static void validateExportName(String exportName) throws IllegalArgumentException
 	{
-		if(shareName == null || shareName.isEmpty())
+		if(exportName == null || exportName.isEmpty())
 		{
-			throw new IllegalArgumentException(".validateShareName(): shareName cannot be null or empty");
+			throw new IllegalArgumentException(".validateExportName(): exportName cannot be null or empty");
 		}
-		if( shareNamePattern.matcher(shareName).find() == false)
+		if( exportNamePattern.matcher(exportName).find() == false)
 		{
-			throw new IllegalArgumentException(".validateShareName(): shareName does not appear to be a valid UNC path");
+			throw new IllegalArgumentException(".validateExportName(): exportName does not appear to be a valid UNC path");
 		}
 	}
 	/**
 	 * validates if the mountPoint provided is acceptable and of the form
-	 * <mountPoint> -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm <location>:<share-name>
-	 * @param mp
+	 * &lt;mountPoint&gt; -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm &lt;location&gt;:&lt;export-name&gt;
+	 * @param afsEntry the autofs template file entry to validate. must conform to the expected format
 	 */
-	public static void validateAutoFsEntry(String afsEntry)
+	public static void validateAutoFsEntry(String afsEntry) throws IllegalArgumentException
 	{
 		if(afsEntry == null || afsEntry.isEmpty())
 		{
@@ -81,45 +81,45 @@ public class NfsMountParamsValidator
 			throw new IllegalArgumentException(".validateAutoFsEntry(): afsEntry does not appear to be a valid AutoFs template entry");
 		}
 		validateMountPoint(groups[0]);
-		validateShareOptions(groups[1]);
-		validateShareResource(groups[2]);		
+		validateExportOptions(groups[1]);
+		validateExportResource(groups[2]);		
 	}
 	/**
-	 * This validates that a shareResource is in the form
-	 * <location>:<share-name>
-	 * @param shareResource
+	 * This validates that a exportResource is in the form
+	 * &lt;location&gt;:&lt;export-name&gt;
+	 * @param exportResource the export path to validate. must conform to the expected format
 	 */
-	public static void validateShareResource(String shareResource)
+	public static void validateExportResource(String exportResource) throws IllegalArgumentException
 	{
-		if(shareResource == null || shareResource.isEmpty())
+		if(exportResource == null || exportResource.isEmpty())
 		{
-			throw new IllegalArgumentException(".validateShareResource(): shareResource cannot be null or empty");
+			throw new IllegalArgumentException(".validateExportResource(): exportResource cannot be null or empty");
 		}
-		String[] groups = shareResource.split(":");
+		String[] groups = exportResource.split(":");
 		if(groups.length != 2)
 		{
 			throw new IllegalArgumentException(
-					String.format(".validateShareResource(): shareResource='%s' does not appear to be a valid AutoFs share resource", shareResource));
+					String.format(".validateExportResource(): exportResource='%s' does not appear to be a valid AutoFs export resource", exportResource));
 		}
 		validateLocation(groups[0]);
-		validateShareName(groups[1]);
+		validateExportName(groups[1]);
 		
 	}
 	/**
-	 * This validates that a shareOptions string is in the form
+	 * This validates that a exportOptions string is in the form
 	 * -(ro|rw),(hard|soft),[intr,] rsize=nnnn,wsize=mmmm
-	 * @param shareOptions
+	 * @param exportOptions the export options to validate. must conform to the expected format
 	 */
-	public static void validateShareOptions(String shareOptions)
+	public static void validateExportOptions(String exportOptions) throws IllegalArgumentException
 	{
-		if(shareOptions == null || shareOptions.isEmpty())
+		if(exportOptions == null || exportOptions.isEmpty())
 		{
-			throw new IllegalArgumentException(".validateShareOptions(): shareOptions cannot be null or empty");
+			throw new IllegalArgumentException(".validateExportOptions(): exportOptions cannot be null or empty");
 		}
-		if(afsEntryPattern.matcher(shareOptions).find() == false)
+		if(afsEntryPattern.matcher(exportOptions).find() == false)
 		{
 			throw new IllegalArgumentException(
-					String.format(".validateShareOptions(): '%s' does not appear to be a valid mount point option string", shareOptions));
+					String.format(".validateExportOptions(): '%s' does not appear to be a valid mount point option string", exportOptions));
 		}
 		
 	}

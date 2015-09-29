@@ -15,7 +15,7 @@ import org.junit.Test;
 import com.seven10.nfs_mounter.NfsMounter;
 import com.seven10.nfs_mounter.NfsMounterFactory;
 import com.seven10.nfs_mounter.exceptions.NfsClientException;
-import com.seven10.nfs_mounter.parameters.NfsMountVolumesParameter;
+import com.seven10.nfs_mounter.parameters.NfsMountExportParameter;
 
 /**
  * @author kmm
@@ -23,10 +23,10 @@ import com.seven10.nfs_mounter.parameters.NfsMountVolumesParameter;
  */
 public class nfs_mounter_IT
 {
-	private List<NfsMountVolumesParameter> createValidParamObjects()
+	private List<NfsMountExportParameter> createValidParamObjects()
 	{
-		List<NfsMountVolumesParameter> rval = new ArrayList<NfsMountVolumesParameter>();
-		rval.add(new NfsMountVolumesParameter("nfs_test","192.168.21.60", "/ifs"));
+		List<NfsMountExportParameter> rval = new ArrayList<NfsMountExportParameter>();
+		rval.add(new NfsMountExportParameter("nfs_test","192.168.21.60", "/ifs"));
 		return rval;
 	}
 	private int getFileCountFromPath(String absolutePath)
@@ -46,8 +46,8 @@ public class nfs_mounter_IT
 	public void test_LinuxMounter() throws NfsClientException, IOException
 	{
 		NfsMounter mounter = NfsMounterFactory.getMounter();
-		List<NfsMountVolumesParameter> parameterObjects = createValidParamObjects();
-		List<File> actualVolumes = mounter.mountVolumes(parameterObjects);
+		List<NfsMountExportParameter> parameterObjects = createValidParamObjects();
+		List<File> actualVolumes = mounter.mountExports(parameterObjects);
 		for(File f: actualVolumes)
 		{
 			int expectedCount = calculateFileCount(f);

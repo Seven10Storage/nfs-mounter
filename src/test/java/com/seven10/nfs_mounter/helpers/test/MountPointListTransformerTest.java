@@ -26,7 +26,7 @@ public class MountPointListTransformerTest
 	
 
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#addToList(java.lang.String, Set)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#addToList(java.lang.String, Set)}.
 	 */
 	@Test
 	public void testAddToList_valid()
@@ -49,7 +49,7 @@ public class MountPointListTransformerTest
 		assertEquals(expectedSize, actualSize);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#addToList(java.lang.String, Set)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#addToList(java.lang.String, Set)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testAddToList_empty_mountPoint()
@@ -60,7 +60,7 @@ public class MountPointListTransformerTest
 		MountPointListTransformer.addToList(mountPoint, mountPointList);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#addToList(java.lang.String, Set)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#addToList(java.lang.String, Set)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testAddToList_null_mountPoint()
@@ -71,7 +71,7 @@ public class MountPointListTransformerTest
 		MountPointListTransformer.addToList(mountPoint, mountPointList);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#addToList(java.lang.String, Set)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#addToList(java.lang.String, Set)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testAddToList_null_mountPointList()
@@ -83,7 +83,7 @@ public class MountPointListTransformerTest
 	}
 	
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#removeFromList(java.lang.String, Set)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#removeFromList(java.lang.String, Set)}.
 	 */
 	@Test
 	public void testRemoveFromList_valid()
@@ -108,7 +108,7 @@ public class MountPointListTransformerTest
 		assertEquals(expectedSize, actualSize);		
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#removeFromList(java.lang.String, Set)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#removeFromList(java.lang.String, Set)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testRemoveFromList_emptyMountPoint()
@@ -120,7 +120,7 @@ public class MountPointListTransformerTest
 		MountPointListTransformer.removeFromList(mountPoint, mountPointList);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#removeFromList(java.lang.String, Set)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#removeFromList(java.lang.String, Set)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testRemoveFromList_nullMountPoint()
@@ -132,7 +132,7 @@ public class MountPointListTransformerTest
 		MountPointListTransformer.removeFromList(mountPoint, mountPointList);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#removeFromList(java.lang.String, Set)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#removeFromList(java.lang.String, Set)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testRemoveFromList_nullMountPointList()
@@ -143,7 +143,7 @@ public class MountPointListTransformerTest
 	}
 	
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#isInList(java.lang.String, java.util.List)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#isInList(java.lang.String, java.util.List)}.
 	 */
 	@Test
 	public void testIsInList_valid()
@@ -163,7 +163,7 @@ public class MountPointListTransformerTest
 		assertTrue(actual);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#isInList(java.lang.String, java.util.List)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#isInList(java.lang.String, java.util.List)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testIsInList_invalid_mountPoint()
@@ -176,7 +176,7 @@ public class MountPointListTransformerTest
 		assertFalse(actual);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#isInList(java.lang.String, java.util.List)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#isInList(java.lang.String, java.util.List)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testIsInList_empty_mountPoint()
@@ -188,7 +188,7 @@ public class MountPointListTransformerTest
 		MountPointListTransformer.isInList(mountPoint, mountPointList);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#isInList(java.lang.String, java.util.List)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#isInList(java.lang.String, java.util.List)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testIsInList_null_mountPoint()
@@ -200,7 +200,7 @@ public class MountPointListTransformerTest
 		MountPointListTransformer.isInList(mountPoint, mountPointList);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.helpers.datamover.object.nfs.MountPointListTransformer#isInList(java.lang.String, java.util.List)}.
+	 * Test method for {@link com.seven10.nfs_mounter.helpers.MountPointListTransformer#isInList(java.lang.String, java.util.List)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testIsInList_null_mountPointList()

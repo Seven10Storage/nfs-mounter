@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.seven10.nfs_mounter.helpers.NfsMounterFormater;
 import com.seven10.nfs_mounter.NfsMounter;
-import com.seven10.nfs_mounter.parameters.NfsMountVolumesParameter;
+import com.seven10.nfs_mounter.parameters.NfsMountExportParameter;
 import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
 
 public class WindowsNfsMounter extends NfsMounter
@@ -18,14 +18,14 @@ public class WindowsNfsMounter extends NfsMounter
 	}
 
 	@Override
-	public	List<File> mountVolumes(List<NfsMountVolumesParameter> parameterObject)
+	public	List<File> mountExports(List<NfsMountExportParameter> parameterObject)
 	{
 		if(parameterObject == null)
 		{
 			throw new IllegalArgumentException(".mountVolumes(): parameterObject must not be null");
 		}
 		ArrayList<File> rval = new ArrayList<File>();
-		for(NfsMountVolumesParameter parameter: parameterObject)
+		for(NfsMountExportParameter parameter: parameterObject)
 		{
 			m_logger.debug(".mountVolumes(): attempting to mount volume '%s'", parameter.toString());
 			String path = NfsMounterFormater.formatMountAsUnc(parameter);
@@ -38,9 +38,18 @@ public class WindowsNfsMounter extends NfsMounter
 		}
 		return rval;
 	}
+	@Override
+	public	File mountExport(NfsMountExportParameter parameterObject)
+	{
+		List<NfsMountExportParameter> paramsList = new ArrayList<NfsMountExportParameter>(1);
+		paramsList.add(parameterObject);
+		List<File> files = mountExports(paramsList);
+		File rval = (files.size() >= 1) ? files.get(0):new File("");
+		return rval;
+	}
 
 	@Override
-	public	void unMountVolumes(List<String> mountPoints)
+	public	void unMountExports(List<String> mountPoints)
 	{
 		if(mountPoints == null)
 		{
@@ -50,6 +59,14 @@ public class WindowsNfsMounter extends NfsMounter
 		// This function does nothing right now because we don't actually "mount" the folder.
 		return;
 		
+	}
+	
+	@Override
+	public	void unMountExport(String mountPoints)
+	{
+		List<String> paramsList = new ArrayList<String>(1);
+		paramsList.add(mountPoints);
+		unMountExports(paramsList);		
 	}
 
 	@Override

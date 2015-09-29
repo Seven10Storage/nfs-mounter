@@ -18,7 +18,7 @@ import org.mockito.Mockito;
 
 import com.seven10.nfs_mounter.linux.AutoFsMgr;
 import com.seven10.nfs_mounter.linux.LinuxNfsMounter;
-import com.seven10.nfs_mounter.parameters.NfsMountVolumesParameter;
+import com.seven10.nfs_mounter.parameters.NfsMountExportParameter;
 import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
 
 /**
@@ -33,16 +33,16 @@ public class LinuxNfsMounterTest
 	private String mountPoint3 = "mnt3";
 	private String mountPoint4 = "mnt4";
 	
-	private List<NfsMountVolumesParameter> createValidParametersList()
+	private List<NfsMountExportParameter> createValidParametersList()
 	{
 		String location = "valid.location.com";
 		String shareName = "/validShare";
-		List<NfsMountVolumesParameter> rval = new ArrayList<NfsMountVolumesParameter>();
+		List<NfsMountExportParameter> rval = new ArrayList<NfsMountExportParameter>();
 
-		rval.add(new NfsMountVolumesParameter(mountPoint1, location, shareName));
-		rval.add(new NfsMountVolumesParameter(mountPoint2, location, shareName));
-		rval.add(new NfsMountVolumesParameter(mountPoint3, location, shareName));
-		rval.add(new NfsMountVolumesParameter(mountPoint4, location, shareName));
+		rval.add(new NfsMountExportParameter(mountPoint1, location, shareName));
+		rval.add(new NfsMountExportParameter(mountPoint2, location, shareName));
+		rval.add(new NfsMountExportParameter(mountPoint3, location, shareName));
+		rval.add(new NfsMountExportParameter(mountPoint4, location, shareName));
 		return rval;
 	}
 	
@@ -63,7 +63,7 @@ public class LinuxNfsMounterTest
 		return mounter;
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.LinuxNfsMounter#LinuxNfsMounter(com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings)}.
+	 * Test method for {@link com.seven10.nfs_mounter.linux.LinuxNfsMounter#LinuxNfsMounter(com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings)}.
 	 */
 	@Test
 	public void testLinuxNfsMounter_valid()
@@ -72,7 +72,7 @@ public class LinuxNfsMounterTest
 		assertNotNull(mounter);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.LinuxNfsMounter#LinuxNfsMounter(com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings)}.
+	 * Test method for {@link com.seven10.nfs_mounter.linux.LinuxNfsMounter#LinuxNfsMounter(com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testLinuxNfsMounter_nullSettings()
@@ -81,7 +81,7 @@ public class LinuxNfsMounterTest
 		new LinuxNfsMounter(nfsMounterFactorySettings, afsMgr);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.LinuxNfsMounter#LinuxNfsMounter(com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings)}.
+	 * Test method for {@link com.seven10.nfs_mounter.linux.LinuxNfsMounter#LinuxNfsMounter(com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings)}.
 	 */
 	@Test(expected=IllegalArgumentException.class)
 	public void testLinuxNfsMounter_nullMgr()
@@ -92,7 +92,7 @@ public class LinuxNfsMounterTest
 	}
 	
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.LinuxNfsMounter#mountVolumes(List)}.
+	 * Test method for {@link com.seven10.nfs_mounter.linux.LinuxNfsMounter#mountExports(List)}.
 	 * @throws IOException 
 	 */
 	@SuppressWarnings("unchecked")
@@ -100,9 +100,9 @@ public class LinuxNfsMounterTest
 	public void testMountVolumes_valid() throws IOException
 	{
 		LinuxNfsMounter mounter = createValidMounter();
-		List<NfsMountVolumesParameter> parameterObjects = createValidParametersList();
+		List<NfsMountExportParameter> parameterObjects = createValidParametersList();
 		
-		List<File> actual = mounter.mountVolumes(parameterObjects);
+		List<File> actual = mounter.mountExports(parameterObjects);
 		
 		assertNotNull(actual);
 		
@@ -113,10 +113,10 @@ public class LinuxNfsMounterTest
 	public void testMountVolumes_emptyList() throws IOException
 	{
 		LinuxNfsMounter mounter = createValidMounter();
-		List<NfsMountVolumesParameter> parameterObjects = new ArrayList<NfsMountVolumesParameter>(0);
+		List<NfsMountExportParameter> parameterObjects = new ArrayList<NfsMountExportParameter>(0);
 		Set<String> parameterStrings = new HashSet<String>(0);
 		
-		mounter.mountVolumes(parameterObjects);
+		mounter.mountExports(parameterObjects);
 
 		Mockito.verify(afsMgr, Mockito.times(1)).setAutoFsEntryList(parameterStrings);
 		Mockito.verify(afsMgr, Mockito.times(1)).updateFile();
@@ -125,13 +125,13 @@ public class LinuxNfsMounterTest
 	public void testMountVolumes_nullList() throws IOException
 	{
 		LinuxNfsMounter mounter = createValidMounter();
-		List<NfsMountVolumesParameter> parameterObjects = null;
+		List<NfsMountExportParameter> parameterObjects = null;
 		
-		mounter.mountVolumes(parameterObjects);
+		mounter.mountExports(parameterObjects);
 	}
 	
 	/**
-	 * Test method for {@link com.seven10.datamover.object.nfs.LinuxNfsMounter#unMountVolumes(List<String>)}.
+	 * Test method for {@link com.seven10.LinuxNfsMounter#unMountVolumes(List<String>)}.
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
@@ -142,13 +142,13 @@ public class LinuxNfsMounterTest
 		LinuxNfsMounter mounter = createValidMounter();
 		List<String> parameterStrings = createValidParametersStrings();
 		
-		mounter.unMountVolumes(parameterStrings);
+		mounter.unMountExports(parameterStrings);
 
 		Mockito.verify(afsMgr, Mockito.times(1)).setAutoFsEntryList(Mockito.anySet());
 		Mockito.verify(afsMgr, Mockito.times(1)).updateFile();
 	}
 	/**
-	 * Test method for {@link com.seven10.datamover.object.nfs.LinuxNfsMounter#unMountVolumes(List<String>)}.
+	 * Test method for {@link com.seven10.LinuxNfsMounter#unMountVolumes(List<String>)}.
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
@@ -159,13 +159,13 @@ public class LinuxNfsMounterTest
 		LinuxNfsMounter mounter = createValidMounter();
 		List<String> parameterStrings = new ArrayList<String>(0);
 		
-		mounter.unMountVolumes(parameterStrings); // should quietly return
+		mounter.unMountExports(parameterStrings); // should quietly return
 
 		Mockito.verify(afsMgr, Mockito.times(0)).setAutoFsEntryList(Mockito.anySet()); // should not call this
 		Mockito.verify(afsMgr, Mockito.times(0)).updateFile(); // should not call this
 	}
 	/**
-	 * Test method for {@link com.seven10.datamover.object.nfs.LinuxNfsMounter#unMountVolumes(List<String>)}.
+	 * Test method for {@link com.seven10.LinuxNfsMounter#unMountVolumes(List<String>)}.
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
@@ -175,11 +175,11 @@ public class LinuxNfsMounterTest
 		LinuxNfsMounter mounter = createValidMounter();
 		List<String> parameterStrings = null;
 		
-		mounter.unMountVolumes(parameterStrings);
+		mounter.unMountExports(parameterStrings);
 	}
 	
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.LinuxNfsMounter#isMounted(java.lang.String)}.
+	 * Test method for {@link com.seven10.nfs_mounter.linux.LinuxNfsMounter#isMounted(java.lang.String)}.
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
@@ -201,7 +201,7 @@ public class LinuxNfsMounterTest
 		assertFalse(actual);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.LinuxNfsMounter#isMounted(java.lang.String)}.
+	 * Test method for {@link com.seven10.nfs_mounter.linux.LinuxNfsMounter#isMounted(java.lang.String)}.
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
@@ -214,7 +214,7 @@ public class LinuxNfsMounterTest
 		mounter.isMounted(mountPoint);
 	}
 	/**
-	 * Test method for {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.LinuxNfsMounter#isMounted(java.lang.String)}.
+	 * Test method for {@link com.seven10.nfs_mounter.linux.LinuxNfsMounter#isMounted(java.lang.String)}.
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
