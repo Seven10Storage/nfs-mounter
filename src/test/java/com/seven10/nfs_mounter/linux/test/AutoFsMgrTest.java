@@ -9,8 +9,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -20,7 +20,7 @@ import com.seven10.nfs_mounter.linux.AutoFsMgr;
 
 /**
  * @author kmm
- *		
+ * 		
  */
 public class AutoFsMgrTest
 {
@@ -31,31 +31,31 @@ public class AutoFsMgrTest
 	
 	private AutoFsMgr createValidMgr(String funcName) throws IOException
 	{
-		String afsTemplatePath = tempFolder.newFolder(funcName).getAbsolutePath() + "/" +templateFileName;
+		String afsTemplatePath = tempFolder.newFolder(funcName).getAbsolutePath() + "/" + templateFileName;
 		AutoFsMgr autoFsMgr = new AutoFsMgr(afsTemplatePath);
 		assertNotNull(autoFsMgr);
 		return autoFsMgr;
 	}
 	
-	private List<String> createValidMountPointList()
+	private Set<String> createValidMountPointList()
 	{
 		// java generic types are stupid so we can't do things the proper way
 		// here
-		List<String> rval = new ArrayList<String>();
-		rval.add("/foo");
-		rval.add("/bar");
-		rval.add("/fizz");
-		rval.add("/fuzz");
-		rval.add("/butt");
+		Set<String> rval = new HashSet<String>();
+		rval.add("foo -ro,soft,rsize=3,wsize=3 valid.address:/foo/mnt");
+		rval.add("bar -ro,soft,rsize=3,wsize=3 valid.address:/bar/mnt");
+		rval.add("fizz -ro,soft,rsize=3,wsize=3 valid.address:/fizz/mnt");
+		rval.add("fuzz -ro,soft,rsize=3,wsize=3 valid.address:/fuzz/mnt");
+		rval.add("butt -ro,soft,rsize=3,wsize=3 valid.address:/butt/mnt");
 		
 		return rval;
 	}
 	
-	private List<String> createinvalidMountPointList()
+	private Set<String> createinvalidMountPointList()
 	{
 		// java generic types are stupid so we can't do things the proper way
 		// here
-		List<String> rval = new ArrayList<String>();
+		Set<String> rval = new HashSet<String>();
 		rval.add("sda sda");
 		return rval;
 	}
@@ -67,9 +67,16 @@ public class AutoFsMgrTest
 		assertTrue(file.exists());
 		BufferedReader reader = new BufferedReader(new FileReader(path));
 		int actualLines = 0;
-		while (reader.readLine() != null) actualLines++;
+		String line;
+		while ((line = reader.readLine()) != null)
+		{
+			if (line.isEmpty() == false)
+			{
+				actualLines++;
+			}
+		}
 		reader.close();
-		assertEquals(expectedLines, actualLines);		
+		assertEquals(expectedLines, actualLines);
 	}
 	
 	/**
@@ -84,6 +91,7 @@ public class AutoFsMgrTest
 	{
 		createValidMgr("testAutoFsMgr_Valid");
 	}
+	
 	/**
 	 * Test method for
 	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#AutoFsMgr(java.lang.String)}
@@ -98,6 +106,7 @@ public class AutoFsMgrTest
 		String afsTemplatePath = "/dev/null";
 		new AutoFsMgr(afsTemplatePath);
 	}
+	
 	/**
 	 * Test method for
 	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#AutoFsMgr(java.lang.String)}
@@ -112,6 +121,7 @@ public class AutoFsMgrTest
 		String afsTemplatePath = "";
 		new AutoFsMgr(afsTemplatePath);
 	}
+	
 	/**
 	 * Test method for
 	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#AutoFsMgr(java.lang.String)}
@@ -129,7 +139,7 @@ public class AutoFsMgrTest
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#setMountPointsList(java.util.List)}
+	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#setAutoFsEntryList(Set)}
 	 * .
 	 * 
 	 * @throws IOException
@@ -137,82 +147,92 @@ public class AutoFsMgrTest
 	@Test
 	public void testSetMountPointsList_valid() throws IOException
 	{
-		AutoFsMgr autoFsMgr = createValidMgr("testSetMountPointsList");		
-		List<String> expected = createValidMountPointList();
-		autoFsMgr.setMountPointsList(expected);
+		AutoFsMgr autoFsMgr = createValidMgr("testSetMountPointsList");
+		Set<String> expected = createValidMountPointList();
+		autoFsMgr.setAutoFsEntryList(expected);
 		autoFsMgr.updateFile();
 		
-		List<String> actual = autoFsMgr.getMountPointList();
+		Set<String> actual = autoFsMgr.getAutoFsEntryList();
 		
-		assertEquals(expected, actual);
+		for(String a:actual)
+		{
+			assertTrue(expected.contains(a));
+		}
 	}
+	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#setMountPointsList(java.util.List)}
+	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#setAutoFsEntryList(Set)}
 	 * .
 	 * 
 	 * @throws IOException
 	 */
-	@Test(expected=IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testSetMountPointsList_invalid() throws IOException
 	{
 		AutoFsMgr autoFsMgr = createValidMgr("testSetMountPointsList");
-		List<String> expected = createinvalidMountPointList();
-		autoFsMgr.setMountPointsList(expected);
+		Set<String> expected = createinvalidMountPointList();
+		autoFsMgr.setAutoFsEntryList(expected);
 	}
+	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#setMountPointsList(java.util.List)}
-	 * .
-	 * An empty list is ok, so no exception is expected.
+	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#setAutoFsEntryList(Set)}
+	 * . An empty list is ok, so no exception is expected.
+	 * 
 	 * @throws IOException
 	 */
 	@Test
 	public void testSetMountPointsList_empty() throws IOException
 	{
 		AutoFsMgr autoFsMgr = createValidMgr("testSetMountPointsList");
-		List<String> expected = new ArrayList<String>(0);
-		autoFsMgr.setMountPointsList(expected);
-		List<String> actual = autoFsMgr.getMountPointList();
+		Set<String> expected = new HashSet<String>(0);
+		autoFsMgr.setAutoFsEntryList(expected);
+		Set<String> actual = autoFsMgr.getAutoFsEntryList();
 		assertEquals(0, actual.size());
 		assertEquals(expected, actual);
 		
 	}
+	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#setMountPointsList(java.util.List)}
+	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#setAutoFsEntryList(Set)}
 	 * .
 	 * 
 	 * @throws IOException
 	 */
-	@Test(expected=IllegalArgumentException.class)
+	@Test(expected = IllegalArgumentException.class)
 	public void testSetMountPointsList_null() throws IOException
 	{
 		AutoFsMgr autoFsMgr = createValidMgr("testSetMountPointsList");
-		List<String> expected = null;
-		autoFsMgr.setMountPointsList(expected);
+		Set<String> expected = null;
+		autoFsMgr.setAutoFsEntryList(expected);
 	}
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#getMountPointList()}.
-	 * @throws IOException 
+	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#getAutoFsEntryList()}
+	 * .
+	 * 
+	 * @throws IOException
 	 */
 	@Test
 	public void testGetMountPointList_default() throws IOException
 	{
 		AutoFsMgr autoFsMgr = createValidMgr("testGetMountPointList_default");
-		List<String> expected = new ArrayList<String>(0);
-		List<String> actual = autoFsMgr.getMountPointList();
+		Set<String> expected = new HashSet<String>(0);
+		Set<String> actual = autoFsMgr.getAutoFsEntryList();
 		assertNotNull(actual);
-		assertEquals(0,actual.size());
+		assertEquals(0, actual.size());
 		assertEquals(expected, actual);
 	}
 	
 	/**
 	 * Test method for
-	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#updateFile()}.
-	 * @throws IOException 
+	 * {@link com.seven10.nfs_mounter.linux.datamover.object.nfs.AutoFsMgr#updateFile()}
+	 * .
+	 * 
+	 * @throws IOException
 	 */
 	@Test
 	public void testUpdateFile() throws IOException
@@ -221,17 +241,26 @@ public class AutoFsMgrTest
 		AutoFsMgr autoFsMgr = createValidMgr(funcName);
 		autoFsMgr.updateFile();
 		int expectedLines = 0;
-		checkFile(expectedLines, funcName);
-		List<String> expected = createValidMountPointList();
-		autoFsMgr.setMountPointsList(expected);
+		checkFile(expectedLines, funcName);	//verify there are no entries in the list
+		
+		Set<String> expected = createValidMountPointList();
+		autoFsMgr.setAutoFsEntryList(expected);
 		autoFsMgr.updateFile();
 		expectedLines = expected.size();
-		checkFile(expectedLines, funcName);
-		autoFsMgr.setMountPointsList(new ArrayList<String>(0)); // set the list to empty, but do NOT update file
-		List<String> actual = autoFsMgr.getMountPointList(); // this should read the list from the file
-		assertEquals(expected, actual);
+		
+		checkFile(expectedLines, funcName); // verify only the lines we put in are there
+		
+		autoFsMgr.setAutoFsEntryList(new HashSet<String>(0)); // set the list
+																// to empty, but
+																// do NOT update
+																// file
+		Set<String> actual = autoFsMgr.getAutoFsEntryList(); // this should
+																// read the list
+																// from the file
+		for(String a:actual)
+		{
+			assertTrue(expected.contains(a));
+		}
 	}
-
-	
 	
 }

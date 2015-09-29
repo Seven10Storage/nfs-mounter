@@ -66,12 +66,12 @@ public class NfsMounterFactorySettings
 	 */
 	public String getLinuxOptionsString()
 	{
-		StringBuilder rval = new StringBuilder();
+		StringBuilder rval = new StringBuilder("-");
 		rval.append((isFsReadOnly) ? "ro," : "rw,");
 		rval.append((isRequestsRetriedIndefinitely) ? "hard," : "soft,");
 		rval.append((isRequestInterruptable) ? "intr," : "");
 		rval.append(String.format("rsize=%d,", readDataBlockSize));
-		rval.append(String.format("wsize=%d,", writeDataBlockSize));
+		rval.append(String.format("wsize=%d", writeDataBlockSize));
 		return rval.toString();
 	}
 	

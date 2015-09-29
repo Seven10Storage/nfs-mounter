@@ -7,6 +7,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import com.seven10.nfs_mounter.parameters.NfsMountParamsValidator;
 import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
 
 /**
@@ -47,6 +48,7 @@ public class NfsMounterFactorySettingsTest
 		expected = settings.isFsReadOnly ? "ro" : "rw";
 		actual = settings.getLinuxOptionsString();
 		assertTrue(actual.contains(expected));
+		NfsMountParamsValidator.validateShareOptions(actual);
 	}
 	/**
 	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings#getLinuxOptionsString()}.
@@ -65,6 +67,7 @@ public class NfsMounterFactorySettingsTest
 		expected = settings.isRequestsRetriedIndefinitely ? "hard" : "soft";
 		actual = settings.getLinuxOptionsString();
 		assertTrue(actual.contains(expected));
+		NfsMountParamsValidator.validateShareOptions(actual);
 	}
 	/**
 	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings#getLinuxOptionsString()}.
@@ -81,6 +84,7 @@ public class NfsMounterFactorySettingsTest
 		settings.isRequestInterruptable = ! isReqInt;
 		actual = settings.getLinuxOptionsString();
 		testInterruptableValue(settings.isRequestInterruptable, actual);
+		NfsMountParamsValidator.validateShareOptions(actual);
 	}
 	/**
 	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings#getLinuxOptionsString()}.
@@ -99,6 +103,7 @@ public class NfsMounterFactorySettingsTest
 		expected = String.format("rsize=%d", settings.readDataBlockSize);
 		actual = settings.getLinuxOptionsString();
 		assertTrue(actual.contains(expected));
+		NfsMountParamsValidator.validateShareOptions(actual);
 	}
 	/**
 	 * Test method for {@link com.seven10.nfs_mounter.parameters.datamover.object.nfs.NfsMounterFactorySettings#getLinuxOptionsString()}.
@@ -120,5 +125,6 @@ public class NfsMounterFactorySettingsTest
 		actual = settings.getLinuxOptionsString();
 		
 		assertTrue(actual.contains(expected));
+		NfsMountParamsValidator.validateShareOptions(actual);
 	}
 }

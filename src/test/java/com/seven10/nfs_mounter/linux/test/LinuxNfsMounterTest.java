@@ -9,7 +9,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.junit.Test;
 import org.mockito.Mockito;
@@ -26,10 +28,10 @@ import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
 public class LinuxNfsMounterTest
 {
 	private AutoFsMgr afsMgr = Mockito.mock(AutoFsMgr.class);
-	private String mountPoint1 = "/mnt1";
-	private String mountPoint2 = "/mnt2";
-	private String mountPoint3 = "/mnt3";
-	private String mountPoint4 = "/mnt4";
+	private String mountPoint1 = "mnt1";
+	private String mountPoint2 = "mnt2";
+	private String mountPoint3 = "mnt3";
+	private String mountPoint4 = "mnt4";
 	
 	private List<NfsMountVolumesParameter> createValidParametersList()
 	{
@@ -104,7 +106,7 @@ public class LinuxNfsMounterTest
 		
 		assertNotNull(actual);
 		
-		Mockito.verify(afsMgr, Mockito.times(1)).setMountPointsList(Mockito.anyList());
+		Mockito.verify(afsMgr, Mockito.times(1)).setAutoFsEntryList(Mockito.anySet());
 		Mockito.verify(afsMgr, Mockito.times(1)).updateFile();
 	}
 	@Test
@@ -112,11 +114,11 @@ public class LinuxNfsMounterTest
 	{
 		LinuxNfsMounter mounter = createValidMounter();
 		List<NfsMountVolumesParameter> parameterObjects = new ArrayList<NfsMountVolumesParameter>(0);
-		List<String> parameterStrings = new ArrayList<String>(0);
+		Set<String> parameterStrings = new HashSet<String>(0);
 		
 		mounter.mountVolumes(parameterObjects);
 
-		Mockito.verify(afsMgr, Mockito.times(1)).setMountPointsList(parameterStrings);
+		Mockito.verify(afsMgr, Mockito.times(1)).setAutoFsEntryList(parameterStrings);
 		Mockito.verify(afsMgr, Mockito.times(1)).updateFile();
 	}
 	@Test(expected=IllegalArgumentException.class)
@@ -142,7 +144,7 @@ public class LinuxNfsMounterTest
 		
 		mounter.unMountVolumes(parameterStrings);
 
-		Mockito.verify(afsMgr, Mockito.times(1)).setMountPointsList(Mockito.anyList());
+		Mockito.verify(afsMgr, Mockito.times(1)).setAutoFsEntryList(Mockito.anySet());
 		Mockito.verify(afsMgr, Mockito.times(1)).updateFile();
 	}
 	/**
@@ -150,6 +152,7 @@ public class LinuxNfsMounterTest
 	 * @throws IOException 
 	 * @throws FileNotFoundException 
 	 */
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testUnMountVolumes_emptyParameter() throws FileNotFoundException, IOException
 	{
@@ -158,7 +161,7 @@ public class LinuxNfsMounterTest
 		
 		mounter.unMountVolumes(parameterStrings); // should quietly return
 
-		Mockito.verify(afsMgr, Mockito.times(0)).setMountPointsList(parameterStrings); // should not call this
+		Mockito.verify(afsMgr, Mockito.times(0)).setAutoFsEntryList(Mockito.anySet()); // should not call this
 		Mockito.verify(afsMgr, Mockito.times(0)).updateFile(); // should not call this
 	}
 	/**
@@ -183,11 +186,11 @@ public class LinuxNfsMounterTest
 	@Test
 	public void testIsMounted_valid() throws FileNotFoundException, IOException
 	{
-		String includedMountPoint = "/includedMount";
-		String notIncludedMountPoint = "/notIncluded";		
-		List<String> listWithMountPoint = new ArrayList<String>();		
+		String includedMountPoint = "includedMount";
+		String notIncludedMountPoint = "notIncluded";		
+		Set<String> listWithMountPoint = new HashSet<String>();		
 		listWithMountPoint.add(includedMountPoint);
-		Mockito.when(afsMgr.getMountPointList()).thenReturn(listWithMountPoint);
+		Mockito.when(afsMgr.getAutoFsEntryList()).thenReturn(listWithMountPoint);
 		
 		LinuxNfsMounter mounter = createValidMounter();
 		String mountPoint = includedMountPoint;

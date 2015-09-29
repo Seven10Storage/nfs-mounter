@@ -10,8 +10,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
@@ -27,7 +27,7 @@ public class AutoFsMgr
 {
 	private static final Logger m_logger = LogManager.getFormatterLogger(AutoFsMgr.class.getName());
 	String autoFsTemplatePath;
-	List<String> mountPointLines;
+	HashSet<String> mountPointLines;
 	
 	private void createFileIfNeeded() throws IOException
 	{
@@ -54,13 +54,13 @@ public class AutoFsMgr
 		}
 		m_logger.debug(".ctor(): autofs template file path = %s", afsTemplatePath);
 		autoFsTemplatePath = afsTemplatePath;
-		mountPointLines = new ArrayList<String>();
+		mountPointLines = new HashSet<String>();
 	}
 	/**
 	 * sets the current mount point list to the contents of the string
 	 * @param mpList
 	 */
-	public void setMountPointsList(List<String> mpList)
+	public void setAutoFsEntryList(Set<String> mpList)
 	{
 		if(mpList == null)
 		{
@@ -68,7 +68,7 @@ public class AutoFsMgr
 		}
 		for(String mp:mpList)
 		{
-			NfsMountParamsValidator.validateMountPoint(mp);
+			NfsMountParamsValidator.validateAutoFsEntry(mp);
 		}
 		m_logger.debug(".setMountPointsList(): setting mountPointList = '%s'", StringUtils.join(mpList, File.pathSeparator));
 		mountPointLines.clear();
@@ -80,9 +80,8 @@ public class AutoFsMgr
 	 * @throws FileNotFoundException if the template
 	 * @throws IOException
 	 */
-	public List<String> getMountPointList() throws FileNotFoundException, IOException
+	public Set<String> getAutoFsEntryList() throws FileNotFoundException, IOException
 	{
-		mountPointLines.clear();
 		String line;
 		createFileIfNeeded();
 		try (
@@ -100,7 +99,7 @@ public class AutoFsMgr
 		    }
 		}
 		m_logger.debug(".getMountPointList(): returning mountPointList='%s'", StringUtils.join(mountPointLines, File.pathSeparator));
-		return mountPointLines;
+		return new HashSet<String>(mountPointLines);
 	}
 	
 	/**
@@ -117,6 +116,7 @@ public class AutoFsMgr
 			writer.write(line);
 			writer.newLine();
 		}
+		writer.newLine();
 		writer.close();
 		m_logger.debug(".updateFile(): update completed");
 	}

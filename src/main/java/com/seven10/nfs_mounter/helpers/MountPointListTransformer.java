@@ -3,7 +3,7 @@
  */
 package com.seven10.nfs_mounter.helpers;
 
-import java.util.List;
+import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,9 +23,8 @@ public class MountPointListTransformer
 	 * @param mountPoint the mount point to add
 	 * @param mountPointList the list to add the mount point to
 	 */
-	public static void addToList(String mountPoint, List<String> mountPointList)
+	public static void addToList(String mountPoint, Set<String> mountPointList)
 	{
-		NfsMountParamsValidator.validateMountPoint(mountPoint);
 		if(mountPointList == null)
 		{
 			throw new IllegalArgumentException(".addToList(): mountPointList cannot be null");
@@ -41,51 +40,22 @@ public class MountPointListTransformer
 	 * @param mountPoint The mount point to remove
 	 * @param mountPointList The list to remove from
 	 */
-	public static void removeFromList(String mountPoint,  List<String> mountPointList)
+	public static void removeFromList(String mountPoint,  Set<String> mountPointList)
 	{
 		NfsMountParamsValidator.validateMountPoint(mountPoint);
 		if(mountPointList == null)
 		{
 			throw new IllegalArgumentException(".removeFromList(): mountPointList cannot be null");
 		}
-		int listIndex;
-		if( (listIndex = getListIndex(mountPoint, mountPointList)) != -1)
+		
+		if(mountPointList.remove(mountPoint))
 		{
-			m_logger.debug(".removeFromList(): mountPoint '%s' found in mountPointList so removing it", mountPoint);
-			mountPointList.remove(listIndex);
-		}		
-	}
-	/**
-	 * Gets the index in the mountPointList that the mountPoint occupies.
-	 * @param mountPoint The mount point to test
-	 * @param mountPointList The list to check in
-	 * @return the index if the mountPoint is in the mountPointList, -1 otherwise
-	 */
-	public static int getListIndex(String mountPoint, List<String> mountPointList)
-	{
-		if(mountPoint == null || mountPoint.isEmpty())
-		{
-			throw new IllegalArgumentException(".validateMountPoint(): mountPoint cannot be null or empty");
+			m_logger.debug(".removeFromList(): mountPoint '%s' found in mountPointList so removing it", mountPoint);	
 		}
-		if(mountPointList == null)
+		else
 		{
-			throw new IllegalArgumentException(".getListIndex(): mountPointList cannot be null");
+			m_logger.debug(".removeFromList(): mountPoint '%s' not found in mountPointList", mountPoint);
 		}
-		int rval = -1;
-		for(int index = 0; index < mountPointList.size(); index ++)
-		{
-			
-			String itemMpEntry = mountPointList.get(index);
-			m_logger.debug(".getListIndex(): testing mountPoint entry '%s'", itemMpEntry);
-			//String itemMpEntrySubst = itemMpEntry.substring(0, mountPoint.length() - 1);
-			if( itemMpEntry == mountPoint )
-			{
-				m_logger.debug(".getListIndex(): found mountPoint '%s' mountPointList at index=%d", mountPoint, index);
-				rval = index;
-				break;
-			}
-		}
-		return rval;
 	}
 	/**
 	 * Indicates if the mount point is somewhere in the list of mount points
@@ -93,8 +63,14 @@ public class MountPointListTransformer
 	 * @param mountPointList the list to check in
 	 * @return true if the mount point is in the list, false otherwise
 	 */
-	public static boolean isInList(String mountPoint,  List<String> mountPointList)
+	public static boolean isInList(String mountPoint,  Set<String> mountPointList)
 	{
-		return getListIndex(mountPoint, mountPointList) != -1;
+		NfsMountParamsValidator.validateMountPoint(mountPoint);
+		if(mountPointList == null)
+		{
+			throw new IllegalArgumentException(".isInList(): mountPointList cannot be null");
+		}
+	
+		return mountPointList.contains(mountPoint);
 	}
 }

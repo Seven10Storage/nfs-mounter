@@ -34,7 +34,7 @@ public class WindowsNfsMounterTest
 	private List<NfsMountVolumesParameter> createValidParametersList()
 	{
 		List<NfsMountVolumesParameter> rval = new ArrayList<NfsMountVolumesParameter>();
-		rval.add(new NfsMountVolumesParameter("/mnt", "192.168.21.60", "/ifs/data/Demo"));
+		rval.add(new NfsMountVolumesParameter("mnt", "192.168.21.60", "/ifs/data/Demo"));
 		return rval;
 	}
 	

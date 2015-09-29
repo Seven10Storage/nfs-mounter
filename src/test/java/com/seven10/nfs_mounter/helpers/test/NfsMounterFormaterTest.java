@@ -18,7 +18,7 @@ import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
 public class NfsMounterFormaterTest
 {
 	
-	private String validMountPoint = "/mountpoint";
+	private String validMountPoint = "mountpoint";
 	private String validLocation = "valid.location.com";
 	private String validShareName = "/validshare";
 	private String validParameterAsUnc = "\\\\valid.location.com\\validshare";
@@ -44,7 +44,7 @@ public class NfsMounterFormaterTest
 	{
 		NfsMountVolumesParameter parameter = createValidParameter();
 		NfsMounterFactorySettings nfsFactorySettings = new NfsMounterFactorySettings();
-		String expected = String.format("%s -%s %s:%s", validMountPoint, nfsFactorySettings.getLinuxOptionsString(),	validLocation, validShareName);	
+		String expected = String.format("%s %s %s:%s", validMountPoint, nfsFactorySettings.getLinuxOptionsString(),	validLocation, validShareName);	
 		
 		String actual = NfsMounterFormater.formatParamterForLine(parameter, nfsFactorySettings);
 		

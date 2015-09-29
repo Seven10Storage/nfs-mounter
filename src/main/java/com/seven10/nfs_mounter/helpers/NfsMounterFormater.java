@@ -42,7 +42,7 @@ public class NfsMounterFormater
 		NfsMountParamsValidator.validateMountPoint(mountPoint);
 		NfsMountParamsValidator.validateLocation(location);
 		NfsMountParamsValidator.validateShareName(shareName);
-		rval = String.format("%s -%s %s:%s", mountPoint,
+		rval = String.format("%s %s %s:%s", mountPoint,
 				factorySettings.getLinuxOptionsString(),
 									location,
 									shareName);		

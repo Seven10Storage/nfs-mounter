@@ -9,11 +9,11 @@ import com.seven10.nfs_mounter.parameters.NfsMountVolumesParameter;
 public class NfsMountVolumesParameterTest
 {
 	
-	private String validMountPoint = "/mnt";
+	private String validMountPoint = "mnt";
 	private String validLocation = "valid.location.com";
 	private String validLinuxShareName = "/validShare/withMoreThanOnePath";
 	private String validWindowsShareName = "\\valid\\Windows\\share";
-	private String invalidMountPoint = "#$@";
+	private String invalidMountPoint = "/#$@";
 	private String invalidLocation = "fasd3$!";
 	private String invalidShareName = "dsldas#$";
 

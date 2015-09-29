@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -83,7 +84,7 @@ public class LinuxNfsMounter extends NfsMounter
 		{
 			throw new IllegalArgumentException(".mountVolumes(): parameterObjects must not be null");
 		}
-		List<String> lines = autoFsMgr.getMountPointList();
+		Set<String> lines = autoFsMgr.getAutoFsEntryList();
 		for (NfsMountVolumesParameter parameter : parameterObjects)
 		{
 			m_logger.debug(".mountVolumes(): attempting to mount volume with parameters='%s'", parameter.toString());
@@ -94,7 +95,7 @@ public class LinuxNfsMounter extends NfsMounter
 				lines.add(newLine);
 			}
 		}
-		autoFsMgr.setMountPointsList(lines);
+		autoFsMgr.setAutoFsEntryList(lines);
 		autoFsMgr.updateFile();
 		return getMountPointFileList(parameterObjects);
 	}
@@ -116,9 +117,9 @@ public class LinuxNfsMounter extends NfsMounter
 		{
 			throw new IllegalArgumentException(".unMountVolumes(): mountPoints must not be null");
 		}
-		List<String> mountPointList = autoFsMgr.getMountPointList();
-		m_logger.debug(".unMountVolumes(): volumes to unmount='%s'",
-				StringUtils.join(mountPointList, File.pathSeparator));
+		Set<String> mountPointList = autoFsMgr.getAutoFsEntryList();
+		m_logger.debug(".unMountVolumes(): volumes to unmount='%s'", StringUtils.join(mountPointList, File.pathSeparator));
+		
 		boolean listUpdated = false;
 		for (String mp : mountPoints)
 		{
@@ -129,7 +130,7 @@ public class LinuxNfsMounter extends NfsMounter
 		}
 		if (listUpdated)
 		{
-			autoFsMgr.setMountPointsList(mountPointList);
+			autoFsMgr.setAutoFsEntryList(mountPointList);
 			autoFsMgr.updateFile();
 		}
 	}
@@ -137,7 +138,7 @@ public class LinuxNfsMounter extends NfsMounter
 	@Override
 	public boolean isMounted(String mountPoint) throws FileNotFoundException, IOException
 	{
-		List<String> mountPointList = autoFsMgr.getMountPointList();
+		Set<String> mountPointList = autoFsMgr.getAutoFsEntryList();
 		m_logger.debug(".isMounted(): testing mountPoint='%s'", mountPoint);
 		return MountPointListTransformer.isInList(mountPoint, mountPointList);
 		
