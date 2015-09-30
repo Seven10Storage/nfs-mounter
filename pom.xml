@@ -5,6 +5,15 @@
 	<artifactId>nfs-mounter</artifactId>
 	<version>1.0-SNAPSHOT</version>
 	<name>nfs-mounter</name>
+
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
 	<properties>
 		<seven10.mockitoVersion>1.9.5</seven10.mockitoVersion>
 		<seven10.javaVersion>1.8</seven10.javaVersion>
@@ -12,6 +21,7 @@
 		<seven10.lang3Version>3.3.2</seven10.lang3Version>
 		<seven10.log4jVersion>2.2</seven10.log4jVersion>
 		<seven10.validatorVersion>1.4.1</seven10.validatorVersion>
+		<seven10.failsafe>2.18</seven10.failsafe>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -59,9 +69,30 @@
 						<target>${seven10.javaVersion}</target>
 					</configuration>
 				</plugin>
+				<plugin>
+					<!-- integration testing -->
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-failsafe-plugin</artifactId>
+					<version>${seven10.failsafe}</version>
+					<executions>
+						<execution>
+							<id>integration-test</id>
+							<goals>
+								<goal>integration-test</goal>
+							</goals>
+						</execution>
+						<execution>
+							<id>verify</id>
+							<goals>
+								<goal>verify</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
 		</plugins>
 	</build>
+	
 </project>

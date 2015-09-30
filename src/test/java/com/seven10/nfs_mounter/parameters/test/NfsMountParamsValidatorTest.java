@@ -82,6 +82,8 @@ public class NfsMountParamsValidatorTest
 	{
 		String exportName = "/myExport";
 		NfsMountParamsValidator.validateExportName(exportName);
+		exportName = "/my_underscored/exportName";
+		NfsMountParamsValidator.validateExportName(exportName);
 	}
 	/**
 	 * Test method for {@link com.seven10.nfs_mounter.parameters.NfsMountParamsValidator#validateExportName(java.lang.String)}.

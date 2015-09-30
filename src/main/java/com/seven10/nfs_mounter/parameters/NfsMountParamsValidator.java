@@ -12,8 +12,8 @@ public class NfsMountParamsValidator
 	private static final Pattern afsEntryPattern;
 	static 
 	{
-		String pathRegex = "(^/[a-zA-Z0-9]+(/[a-zA-Z0-9]*)*$)|(^\\\\[a-zA-Z0-9]+(\\\\[a-zA-Z0-9]*)*)";
-		String hostNameRegEx = "^[a-zA-Z0-9]+(\\.?[a-zA-Z0-9]+(\\-[a-zA-Z0-9])*)*(\\:?\\d+)*$";
+		String pathRegex = "(^/[a-zA-Z0-9_]+(/[a-zA-Z0-9_]*)*$)|(^\\\\[a-zA-Z0-9_]+(\\\\[a-zA-Z0-9_]*)*)";
+		String hostNameRegEx = "^[a-zA-Z0-9\\-]+(\\.?[a-zA-Z0-9\\-]+(\\-[a-zA-Z0-9\\-])*)*(\\:?\\d+)*$";
 		String mountRegEx = "^[a-zA-Z0-9_.]+$";
 		String afsEntryRegEx = "^\\-(ro|rw),(soft|hard),(intr,|)rsize=\\d+,wsize=\\d+$";
 		exportNamePattern = Pattern.compile(pathRegex);
