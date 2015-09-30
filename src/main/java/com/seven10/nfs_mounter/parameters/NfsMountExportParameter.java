@@ -32,4 +32,10 @@ public class NfsMountExportParameter
 		m_logger.debug(".ctor(): windowsExportName='%s'", rval);
 		return rval;
 	}
+	@Override
+	public String toString()
+	{
+		String rval = String.format("mountPoint='%s', location='%s', exportName='%s' ", mountPoint, location, linuxExportName);
+		return rval;
+	}
 }

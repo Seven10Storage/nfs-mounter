@@ -25,6 +25,11 @@ import com.seven10.nfs_mounter.parameters.NfsMountParamsValidator;
  */
 public class AutoFsMgr
 {
+	/**
+	 * Sometimes the jvm takes a bit of time to transfer the new settings to the autoFs demon.
+	 * This delay is meant to provide a pause during which time the jvm and filesystem can catch up
+	 */
+	private static final int autoFsFlushDelay = 1000;
 	private static final Logger m_logger = LogManager.getFormatterLogger(AutoFsMgr.class.getName());
 	String autoFsTemplatePath;
 	HashSet<String> mountPointLines;
@@ -118,6 +123,15 @@ public class AutoFsMgr
 		}
 		writer.newLine();
 		writer.close();
+		try
+		{
+			// we need to give autofs time to get the changes from the jvm
+			Thread.sleep(autoFsFlushDelay);
+		}
+		catch (InterruptedException e)
+		{
+			// I don't care about this exception
+		}
 		m_logger.debug(".updateFile(): update completed");
 	}
 	

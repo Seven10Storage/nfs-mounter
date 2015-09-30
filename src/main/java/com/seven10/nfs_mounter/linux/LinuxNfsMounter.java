@@ -115,7 +115,12 @@ public class LinuxNfsMounter extends NfsMounter
 		List<NfsMountExportParameter> paramsList = new ArrayList<NfsMountExportParameter>(1);
 		paramsList.add(parameterObjects);
 		List<File> files = mountExports(paramsList);
-		File rval = (files.size() >= 1) ? files.get(0):new File("");
+		if (files.size() < 1)
+		{
+			throw new IOException(String.format(".mountExport(): the requested export '%s' could not be opened",
+					parameterObjects.getMountPoint()));
+		}
+		File rval = files.get(0);
 		return rval;
 	}
 	
