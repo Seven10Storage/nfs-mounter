@@ -120,4 +120,25 @@ public class AutoFsMgr
 		writer.close();
 		m_logger.debug(".updateFile(): update completed");
 	}
+	
+	/**
+	 * retrieves the number of lines in the autoFsTemplate file
+	 * @return the number of lines excluding blank lines
+	 * @throws IOException
+	 */
+	public int getFileLineCount() throws IOException
+	{
+		BufferedReader reader = new BufferedReader(new FileReader(autoFsTemplatePath));
+		int actualLines = 0;
+		String line;
+		while ((line = reader.readLine()) != null)
+		{
+			if (line.isEmpty() == false)
+			{
+				actualLines++;
+			}
+		}
+		reader.close();
+		return actualLines;
+	}
 }

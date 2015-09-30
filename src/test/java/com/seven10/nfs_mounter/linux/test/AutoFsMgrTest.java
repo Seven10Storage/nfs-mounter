@@ -5,9 +5,8 @@ package com.seven10.nfs_mounter.linux.test;
 
 import static org.junit.Assert.*;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -23,11 +22,11 @@ import com.seven10.nfs_mounter.linux.AutoFsMgr;
  * 		
  */
 public class AutoFsMgrTest
-{
-	
+{	
 	private static final String templateFileName = "auto.template";
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
+	private int fileLinesCountTestCount = 10;
 	
 	private AutoFsMgr createValidMgr(String funcName) throws IOException
 	{
@@ -60,24 +59,7 @@ public class AutoFsMgrTest
 		return rval;
 	}
 	
-	private void checkFile(int expectedLines, String funcName) throws IOException
-	{
-		String path = String.format("%s/%s/%s", tempFolder.getRoot().getAbsolutePath(), funcName, templateFileName);
-		File file = new File(path);
-		assertTrue(file.exists());
-		BufferedReader reader = new BufferedReader(new FileReader(path));
-		int actualLines = 0;
-		String line;
-		while ((line = reader.readLine()) != null)
-		{
-			if (line.isEmpty() == false)
-			{
-				actualLines++;
-			}
-		}
-		reader.close();
-		assertEquals(expectedLines, actualLines);
-	}
+	
 	
 	/**
 	 * Test method for
@@ -241,14 +223,16 @@ public class AutoFsMgrTest
 		AutoFsMgr autoFsMgr = createValidMgr(funcName);
 		autoFsMgr.updateFile();
 		int expectedLines = 0;
-		checkFile(expectedLines, funcName);	//verify there are no entries in the list
+		int actualLines = autoFsMgr.getFileLineCount();
+		assertEquals(expectedLines, actualLines);	//verify there are no entries in the list
 		
 		Set<String> expected = createValidMountPointList();
 		autoFsMgr.setAutoFsEntryList(expected);
 		autoFsMgr.updateFile();
 		expectedLines = expected.size();
 		
-		checkFile(expectedLines, funcName); // verify only the lines we put in are there
+		actualLines = autoFsMgr.getFileLineCount();
+		assertEquals(expectedLines, actualLines);	//verify there are no entries in the list
 		
 		autoFsMgr.setAutoFsEntryList(new HashSet<String>(0)); // set the list
 																// to empty, but
@@ -261,6 +245,33 @@ public class AutoFsMgrTest
 		{
 			assertTrue(expected.contains(a));
 		}
+	}
+	
+	/**
+	 * Test method for
+	 * {@link com.seven10.nfs_mounter.linux.AutoFsMgr#getFileLineCount()}
+	 * .
+	 * 
+	 * @throws IOException
+	 */
+	@Test
+	public void testGetFileLineCount() throws IOException
+	{
+		String afsTemplatePath = tempFolder.newFolder("testGetFileLineCount").getAbsolutePath() + "/" + templateFileName;
+		AutoFsMgr autoFsMgr = new AutoFsMgr(afsTemplatePath);
+		
+		BufferedWriter writer = new BufferedWriter(new FileWriter(afsTemplatePath, false));
+		for(int index = 0; index< fileLinesCountTestCount; index++)
+		{
+			writer.write(String.format("%d", index));
+			writer.newLine();
+		}
+		writer.newLine();
+		writer.close();
+		
+		int expected = fileLinesCountTestCount;
+		int actual = autoFsMgr.getFileLineCount();
+		assertEquals(expected, actual);
 	}
 	
 }

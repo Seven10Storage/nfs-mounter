@@ -25,6 +25,7 @@ public class MountPointListTransformer
 	 */
 	public static void addToList(String mountPoint, Set<String> mountPointList)
 	{
+		NfsMountParamsValidator.validateMountPoint(mountPoint);
 		if(mountPointList == null)
 		{
 			throw new IllegalArgumentException(".addToList(): mountPointList cannot be null");
@@ -35,27 +36,36 @@ public class MountPointListTransformer
 			mountPointList.add(mountPoint);
 		}		
 	}
+
 	/**
 	 * Remove a mount point from the given list. If the item is not present, it will exit quietly
 	 * @param mountPoint The mount point to remove
 	 * @param mountPointList The list to remove from
+	 * @return TODO
 	 */
-	public static void removeFromList(String mountPoint,  Set<String> mountPointList)
+	public static boolean removeFromList(String mountPoint,  Set<String> mountPointList)
 	{
+		boolean rval = false;
 		NfsMountParamsValidator.validateMountPoint(mountPoint);
 		if(mountPointList == null)
 		{
 			throw new IllegalArgumentException(".removeFromList(): mountPointList cannot be null");
 		}
-		
-		if(mountPointList.remove(mountPoint))
+		for(String mp:mountPointList)
 		{
-			m_logger.debug(".removeFromList(): mountPoint '%s' found in mountPointList so removing it", mountPoint);	
+			if(mp.matches(String.format("^%s\\s?.*", mountPoint)))
+			{
+				rval = true;
+				m_logger.debug(".removeFromList(): mountPoint '%s' found in mountPointList so removing it", mountPoint);	
+				mountPointList.remove(mp);
+				break;
+			}
 		}
-		else
+		if(rval == false)
 		{
 			m_logger.debug(".removeFromList(): mountPoint '%s' not found in mountPointList", mountPoint);
 		}
+		return rval;
 	}
 	/**
 	 * Indicates if the mount point is somewhere in the list of mount points
