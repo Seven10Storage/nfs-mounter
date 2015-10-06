@@ -29,7 +29,6 @@ public class AutoFsMgr
 	 * Sometimes the jvm takes a bit of time to transfer the new settings to the autoFs demon.
 	 * This delay is meant to provide a pause during which time the jvm and filesystem can catch up
 	 */
-	private static final int autoFsFlushDelay = 1000;
 	private static final Logger m_logger = LogManager.getFormatterLogger(AutoFsMgr.class.getName());
 	String autoFsTemplatePath;
 	HashSet<String> mountPointLines;
@@ -69,13 +68,13 @@ public class AutoFsMgr
 	{
 		if(mpList == null)
 		{
-			throw new IllegalArgumentException(".setMountPointsList(): mpList must not be null");
+			throw new IllegalArgumentException(".setAutoFsEntryList(): mpList must not be null");
 		}
 		for(String mp:mpList)
 		{
 			NfsMountParamsValidator.validateAutoFsEntry(mp);
 		}
-		m_logger.debug(".setMountPointsList(): setting mountPointList = '%s'", StringUtils.join(mpList, File.pathSeparator));
+		m_logger.debug(".setAutoFsEntryList(): setting mountPointList = '%s'", StringUtils.join(mpList, File.pathSeparator));
 		mountPointLines.clear();
 		mountPointLines.addAll(mpList);
 	}
@@ -98,12 +97,12 @@ public class AutoFsMgr
 		    {
 		        if( line.isEmpty() == false)
 		        {
-		        	m_logger.debug(".getMountPointList(): adding line '%s' to mountPointList", line);
+		        	m_logger.debug(".getAutoFsEntryList(): adding line '%s' to mountPointList", line);
 		        	mountPointLines.add(line);
 		        }		        	
 		    }
 		}
-		m_logger.debug(".getMountPointList(): returning mountPointList='%s'", StringUtils.join(mountPointLines, File.pathSeparator));
+		m_logger.debug(".getAutoFsEntryList(): returning mountPointList='%s'", StringUtils.join(mountPointLines, File.pathSeparator));
 		return new HashSet<String>(mountPointLines);
 	}
 	
@@ -114,24 +113,21 @@ public class AutoFsMgr
 	public void updateFile() throws IOException
 	{
 		m_logger.debug(".updateFile(): opening file '%s' for update", autoFsTemplatePath);
+		
+		// TODO: Make this append rather than re-write the file every time
+		//FileWriter writer = new FileWriter(autoFsTemplatePath, false);
 		BufferedWriter writer = new BufferedWriter(new FileWriter(autoFsTemplatePath, false));
+		
 		m_logger.debug(".updateFile(): updating with '%d' lines", mountPointLines.size());
 		for (String line : mountPointLines)
 		{
 			writer.write(line);
-			writer.newLine();
+			writer.write("\n");
 		}
-		writer.newLine();
+		
+		writer.flush();
 		writer.close();
-		try
-		{
-			// we need to give autofs time to get the changes from the jvm
-			Thread.sleep(autoFsFlushDelay);
-		}
-		catch (InterruptedException e)
-		{
-			// I don't care about this exception
-		}
+		
 		m_logger.debug(".updateFile(): update completed");
 	}
 	
