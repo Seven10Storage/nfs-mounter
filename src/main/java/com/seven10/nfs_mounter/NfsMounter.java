@@ -20,7 +20,7 @@ import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
  */
 public abstract class NfsMounter
 {
-	protected static final Logger m_logger = LogManager.getFormatterLogger(NfsMounter.class.getName());
+	protected static final Logger m_logger = LogManager.getFormatterLogger(NfsMounter.class);
 	protected NfsMounterFactorySettings settings;
 	
 	protected NfsMounter(NfsMounterFactorySettings factorySettings)

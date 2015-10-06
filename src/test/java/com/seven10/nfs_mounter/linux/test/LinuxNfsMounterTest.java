@@ -3,10 +3,14 @@
  */
 package com.seven10.nfs_mounter.linux.test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -16,6 +20,8 @@ import java.util.Set;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import com.seven10.nfs_mounter.NfsMounter;
+import com.seven10.nfs_mounter.NfsMounterFactory;
 import com.seven10.nfs_mounter.linux.AutoFsMgr;
 import com.seven10.nfs_mounter.linux.LinuxNfsMounter;
 import com.seven10.nfs_mounter.parameters.NfsMountExportParameter;
@@ -227,5 +233,163 @@ public class LinuxNfsMounterTest
 		mounter.isMounted(mountPoint);
 	}
 	
+	@Test
+	public void passMultiMountTest() throws Exception
+	{
+		// Empty out file
+		FileWriter writer = new FileWriter("/usr/local/etc/auto.hydra", false);
+		writer.flush();
+		writer.close();
+		
+		//String deviceName = "Src";
+		String resourceName = "Source";
+		String exportPath = "/home/mintserver1/Src";
+		String address = "192.168.21.111";
+		
+		String strMountBase = "/mnt/hydra";
+		String strMountOptions = "-rw,hard,intr,rsize=8192,wsize=8192";
+		
+		// Source
+		StringBuilder sb = new StringBuilder(resourceName);
+		sb.append(" ");
+		sb.append(strMountOptions);
+		sb.append(" ");
+		sb.append(address);
+		sb.append(":");
+		sb.append(exportPath);
+		String strSourceMount = sb.toString();
+		
+		// Dest
+		resourceName = "Destination";
+		exportPath = "/home/mintserver1/Dest";		
+		sb = new StringBuilder(resourceName);
+		sb.append(" ");
+		sb.append(strMountOptions);
+		sb.append(" ");
+		sb.append(address);
+		sb.append(":");
+		sb.append(exportPath);
+		String strDestMount = sb.toString();
+		
+		// Create writer
+		writer = new FileWriter("/usr/local/etc/auto.hydra", false);
+		BufferedWriter bufferedWriter = new BufferedWriter(writer);
+		File mountFile;
+		
+		// Write line
+		//bufferedWriter.write("\n");
+		bufferedWriter.write(strSourceMount);
+		bufferedWriter.write("\n");
+		bufferedWriter.write(strDestMount);
+		
+		// Flush and close all writer buffers
+		bufferedWriter.flush();
+		bufferedWriter.close();
+		
+		mountFile = new File(strMountBase + File.separator + "Source");
+		assertTrue(mountFile.exists());		
+		for (String strFile : mountFile.list())
+		{
+			System.out.println("\tSource Found: " + strFile);
+		}
+		
+		mountFile = new File(strMountBase + File.separator + "Destination");
+		assertTrue(mountFile.exists());
+		for (String strFile : mountFile.list())
+		{
+			System.out.println("\tSource Found: " + strFile);
+		}
+		
+		// Empty out file
+		writer = new FileWriter("/usr/local/etc/auto.hydra", false);
+		writer.flush();
+		writer.close();
+	}
 	
+	/**
+	 * @param deviceName 
+	 * @param addresses 
+	 * @param deviceObject
+	 * @param resourceType
+	 * @param strPath
+	 * @return the path to the mounted volume
+	 * @throws IOException
+	 * @throws BadRequestException
+	 */
+	@Test
+	public void failedMultiMountTest() throws Exception
+	{
+		NfsMounter mounter = NfsMounterFactory.getMounter();
+		
+		String deviceName = "Src";
+		String resourceId = "resource_Source";
+		String exportName = "/home/mintserver1/Src";
+		String[] addresses = new String[]{"192.168.21.111"};
+		
+		NfsMountExportParameter exportParams;
+		File file;
+		
+		exportParams = createExportParams(deviceName, resourceId, exportName, addresses);
+		file = mounter.mountExport(exportParams);
+		assertTrue(file.exists());
+		
+		for(String strFile : file.list())
+		{
+			System.out.println(strFile);
+		}
+		
+		deviceName = "Dest";
+		resourceId = "resource_Destination";
+		exportName = "/home/mintserver1/Dest";
+		
+		exportParams = createExportParams(deviceName, resourceId, exportName, addresses);
+		file = mounter.mountExport(exportParams);
+		assertTrue(file.exists());
+		
+		for(String strFile : file.list())
+		{
+			System.out.println(strFile);
+		}
+		//rval = file.getAbsolutePath();
+	}
+	
+	private static NfsMountExportParameter createExportParams(String deviceName, String resourceId, String exportName, String []addresses)
+	{
+		String mountPoint = createUniqId(deviceName, resourceId);
+		String location = getValidAddress(deviceName, addresses);
+		NfsMountExportParameter exportParams = new NfsMountExportParameter(mountPoint, location, exportName);
+				return exportParams;
+	}
+	
+	private static String sanatizeName(String oldName)
+	{
+		String rval = oldName.replaceAll("[^\\w\\d]", "_");
+		//m_logger.trace(".sanatizeName(): sanatized name=%s", rval);
+		return rval;
+	}
+	/**
+	 * @param deviceName TODO
+	 * @param resourceId TODO
+	 * @param deviceResource
+	 * @return
+	 */
+	private static String createUniqId(String deviceName, String resourceId)
+	{
+		String name = sanatizeName(deviceName);
+		String mountPoint = new StringBuilder(name).append("_").append(resourceId).toString();
+		//m_logger.trace(".createUniqId(): new UniqueId=%s", mountPoint);
+		return mountPoint;
+	}
+	/**
+	 * @param device
+	 * @return
+	 */
+	private static String getValidAddress(String deviceName, String []addresses)
+	{
+		if(addresses.length <= 0)
+		{
+			throw new IllegalArgumentException(String.format(".getValidAddress(): requires a valid address. None found for device '%s'", deviceName));
+		}		
+		return addresses[0];
+	}
 }

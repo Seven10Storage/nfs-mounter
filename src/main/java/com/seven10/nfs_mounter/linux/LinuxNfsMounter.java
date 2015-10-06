@@ -19,39 +19,7 @@ import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
 
 public class LinuxNfsMounter extends NfsMounter
 {
-	AutoFsMgr autoFsMgr;
-	
-	/**
-	 * creates a list of file handles for each mounted export in the list
-	 * 
-	 * @param parameterObjects The list of parameter objects that provide the mount point
-	 *            
-	 * @return the array of file handles from the mounted exports.
-	 */
-	private List<File> getMountPointFileList(List<NfsMountExportParameter> parameterObjects)
-	{
-		List<File> rval = new ArrayList<File>();
-		for (NfsMountExportParameter parameter : parameterObjects)
-		{
-			m_logger.debug(".getMountPointFileList(): processing mountPoint '%s'", parameter.toString());
-			String fullMountPoint = String.format("%s/%s", settings.linuxBaseMntDir, parameter.getMountPoint());
-			m_logger.debug(".getMountPointFileList(): fullMountPoint=%s", parameter.toString());
-			
-			File mpFile = new File(fullMountPoint);
-			if (mpFile.exists())
-			{
-				m_logger.debug(".getMountPointFileList(): mountPoint '%s' file exists. Adding to list",
-						parameter.toString());
-				rval.add(mpFile);
-			}
-			else
-			{
-				m_logger.debug(".getMountPointFileList(): mountPoint '%s' does not exists. Ignoring",
-						parameter.toString());
-			}
-		}
-		return rval;
-	}
+	private final AutoFsMgr autoFsMgr;
 	
 	/**
 	 * Constructor
@@ -68,6 +36,39 @@ public class LinuxNfsMounter extends NfsMounter
 			throw new IllegalArgumentException(".ctor(): afsMgr must not be null");
 		}
 		autoFsMgr = afsMgr;
+	}
+	
+	/**
+	 * creates a list of file handles for each mounted export in the list
+	 * 
+	 * @param parameterObjects The list of parameter objects that provide the mount point
+	 *            
+	 * @return the array of file handles from the mounted exports.
+	 */
+	private List<File> getMountPointFileList(List<NfsMountExportParameter> parameterObjects)
+	{
+		List<File> rval = new ArrayList<File>();
+		for (NfsMountExportParameter parameter : parameterObjects)
+		{
+			m_logger.debug(".getMountPointFileList(): processing mountPoint '%s'", parameter.toString());
+			
+			String fullMountPoint = String.format("%s/%s", settings.linuxBaseMntDir, parameter.getMountPoint());
+			m_logger.debug(".getMountPointFileList(): fullMountPoint=%s", fullMountPoint);
+			
+			File mpFile = new File(fullMountPoint);
+			if (mpFile.exists())
+			{
+				m_logger.debug(".getMountPointFileList(): mountPoint '%s' file exists. Adding to list",
+								parameter.toString());
+				rval.add(mpFile);
+			}
+			else
+			{
+				m_logger.warn(".getMountPointFileList(): mountPoint '%s' does not exists. Ignoring",
+						parameter.toString());
+			}
+		}
+		return rval;
 	}
 
 	/**
@@ -86,6 +87,7 @@ public class LinuxNfsMounter extends NfsMounter
 		{
 			throw new IllegalArgumentException(".mountExports(): parameterObjects must not be null");
 		}
+		
 		Set<String> lines = autoFsMgr.getAutoFsEntryList();
 		for (NfsMountExportParameter parameter : parameterObjects)
 		{
@@ -97,10 +99,13 @@ public class LinuxNfsMounter extends NfsMounter
 				lines.add(newLine);
 			}
 		}
+		
 		autoFsMgr.setAutoFsEntryList(lines);
 		autoFsMgr.updateFile();
+		
 		return getMountPointFileList(parameterObjects);
 	}
+	
 	/**
 	 * function to mount a single export via autofs
 	 * 
@@ -116,11 +121,15 @@ public class LinuxNfsMounter extends NfsMounter
 		List<NfsMountExportParameter> paramsList = new ArrayList<NfsMountExportParameter>(1);
 		paramsList.add(parameterObjects);
 		List<File> files = mountExports(paramsList);
+		
 		if (files.size() < 1)
 		{
-			throw new IOException(String.format(".mountExport(): the requested export '%s' could not be opened",
-					parameterObjects.getMountPoint()));
+			m_logger.error(".mountExport(): returned list of files for the mount does not contain the mount expected");
+			
+			throw new IOException(String.format(".mountExport(): the requested export '%s' could not be opened", 
+								  parameterObjects.getMountPoint()));
 		}
+		
 		File rval = files.get(0);
 		return rval;
 	}
@@ -159,6 +168,7 @@ public class LinuxNfsMounter extends NfsMounter
 			autoFsMgr.updateFile();
 		}
 	}
+	
 	/**
 	 * function to remove the requested export from the autofs template file.
 	 * autofs will remove the mount points after the amount of time configured
@@ -194,7 +204,4 @@ public class LinuxNfsMounter extends NfsMounter
 		autoFsMgr.updateFile();
 		
 	}
-
-	
-	
 }

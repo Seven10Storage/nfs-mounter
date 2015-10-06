@@ -72,12 +72,13 @@ public class AutoFsMgr
 	{
 		if (mpList == null)
 		{
-			throw new IllegalArgumentException(".setMountPointsList(): mpList must not be null");
+			throw new IllegalArgumentException(".setAutoFsEntryList(): mpList must not be null");
 		}
 		for (String mp : mpList)
 		{
 			NfsMountParamsValidator.validateAutoFsEntry(mp);
 		}
+
 		m_logger.debug(".setMountPointsList(): setting mountPointList = '%s'",
 				StringUtils.join(mpList, File.pathSeparator));
 		mountPointLines.clear();
@@ -110,6 +111,7 @@ public class AutoFsMgr
 		}
 		m_logger.debug(".getMountPointList(): returning mountPointList='%s'",
 				StringUtils.join(mountPointLines, File.pathSeparator));
+
 		return new HashSet<String>(mountPointLines);
 	}
 	
@@ -123,7 +125,11 @@ public class AutoFsMgr
 	public void updateFile() throws IOException
 	{
 		m_logger.debug(".updateFile(): opening file '%s' for update", autoFsTemplatePath);
+		
+		// TODO: Make this append rather than re-write the file every time
+		//FileWriter writer = new FileWriter(autoFsTemplatePath, false);
 		BufferedWriter writer = new BufferedWriter(new FileWriter(autoFsTemplatePath, false));
+		
 		m_logger.debug(".updateFile(): updating with '%d' lines", mountPointLines.size());
 		for (String line : mountPointLines)
 		{
@@ -132,6 +138,7 @@ public class AutoFsMgr
 		}
 		writer.flush();
 		writer.close();
+		
 		m_logger.debug(".updateFile(): update completed");
 	}
 	
