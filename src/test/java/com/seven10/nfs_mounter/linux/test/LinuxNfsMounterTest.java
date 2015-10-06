@@ -297,7 +297,7 @@ public class LinuxNfsMounterTest
 		assertTrue(mountFile.exists());
 		for (String strFile : mountFile.list())
 		{
-			System.out.println("\tSource Found: " + strFile);
+			System.out.println("\tDest Found: " + strFile);
 		}
 		
 		// Empty out file
@@ -351,6 +351,11 @@ public class LinuxNfsMounterTest
 			System.out.println(strFile);
 		}
 		//rval = file.getAbsolutePath();
+		
+		// Empty out file
+		FileWriter writer = new FileWriter("/usr/local/etc/auto.hydra", false);
+		writer.flush();
+		writer.close();
 	}
 	
 	private static NfsMountExportParameter createExportParams(String deviceName, String resourceId, String exportName, String []addresses)
