@@ -37,5 +37,6 @@ public abstract class NfsMounter
 	public abstract File mountExport(NfsMountExportParameter parameterObject) throws IOException;
 	public abstract void unMountExports(List<String> mountPoints) throws FileNotFoundException, IOException;
 	public abstract void unMountExport(String mountPoint) throws FileNotFoundException, IOException;
-	public abstract boolean isMounted(String mountPoint) throws FileNotFoundException, IOException;	
+	public abstract boolean isMounted(String mountPoint) throws FileNotFoundException, IOException;
+	public abstract void unMountAll() throws IOException;	
 }

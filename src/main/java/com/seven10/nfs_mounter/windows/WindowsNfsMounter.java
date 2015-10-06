@@ -1,6 +1,7 @@
 package com.seven10.nfs_mounter.windows;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,6 +81,13 @@ public class WindowsNfsMounter extends NfsMounter
 		boolean rval = file.exists();
 		m_logger.debug(".isMounted(): voulume mounted = %s", Boolean.toString(rval));
 		return rval;
+	}
+
+	@Override
+	public void unMountAll() throws IOException
+	{
+		// ok.		
+		m_logger.debug(".unMountAll(): Windows nfs clients don't actually mount or unmount. doing nothing here");
 	}
 	
 }
