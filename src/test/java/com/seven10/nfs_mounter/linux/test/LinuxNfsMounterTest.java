@@ -242,7 +242,7 @@ public class LinuxNfsMounterTest
 		writer.close();
 		
 		//String deviceName = "Src";
-		String resourceName = "Source";
+		String resourceName = "Resource_Source";
 		String exportPath = "/home/mintserver1/Src";
 		String address = "192.168.21.111";
 		
@@ -260,7 +260,7 @@ public class LinuxNfsMounterTest
 		String strSourceMount = sb.toString();
 		
 		// Dest
-		resourceName = "Destination";
+		resourceName = "Resource_Destination";
 		exportPath = "/home/mintserver1/Dest";		
 		sb = new StringBuilder(resourceName);
 		sb.append(" ");
@@ -286,14 +286,14 @@ public class LinuxNfsMounterTest
 		bufferedWriter.flush();
 		bufferedWriter.close();
 		
-		mountFile = new File(strMountBase + File.separator + "Source");
+		mountFile = new File(strMountBase + File.separator + "Resource_Source");
 		assertTrue(mountFile.exists());		
 		for (String strFile : mountFile.list())
 		{
 			System.out.println("\tSource Found: " + strFile);
 		}
 		
-		mountFile = new File(strMountBase + File.separator + "Destination");
+		mountFile = new File(strMountBase + File.separator + "Resource_Destination");
 		assertTrue(mountFile.exists());
 		for (String strFile : mountFile.list())
 		{
