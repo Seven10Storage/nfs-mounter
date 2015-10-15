@@ -11,7 +11,6 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.Rule;
 import org.junit.Test;
@@ -25,19 +24,35 @@ import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
 
 /**
  * @author kmm
- *		
+ * 		
  */
 public class nfs_mounter_IT
 {
+	private static final String nfsExportDest = "/nfsExport/Dest";
+	private static final String nfsExportSrc = "/nfsExport/Src";
+	private static final String nfsHostAddress = "localhost";
 	private static final String templateFileName = "auto.template";
+	
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
-
-		
-	private List<NfsMountExportParameter> createValidParamObjects()
+	
+	private int testIterationsCount = 6;
+	private int timeBetweenRuns = 31 * 1000;
+	private int timeInfoIncrements = 10 * 1000;
+	
+	private String createMountSrc(int iteration)
+	{
+		return String.format("%s_sS_%d", nfsHostAddress, iteration);
+	}
+	private String createMountDest(int iteration)
+	{
+		return String.format("%s_sS_%d", nfsHostAddress, iteration);
+	}
+	private List<NfsMountExportParameter> createValidParamObjects(int iteration)
 	{
 		List<NfsMountExportParameter> rval = new ArrayList<NfsMountExportParameter>();
-		rval.add(new NfsMountExportParameter("nfs_test", "192.168.21.60", "/ifs"));
+		rval.add(new NfsMountExportParameter(createMountSrc(iteration), nfsHostAddress, nfsExportSrc));
+		rval.add(new NfsMountExportParameter(createMountDest(iteration), nfsHostAddress, nfsExportDest));
 		return rval;
 	}
 	
@@ -74,18 +89,40 @@ public class nfs_mounter_IT
 	{
 		if (SystemUtils.IS_OS_LINUX)
 		{
-			NfsMounterFactorySettings testMounterConfig = new NfsMounterFactorySettings(); // make sure the settings are the default
-			NfsMounterFactory.setMounterConfig(testMounterConfig);
-			NfsMounter mounter = NfsMounterFactory.getMounter();
-			List<NfsMountExportParameter> parameterObjects = createValidParamObjects();
-			List<File> actualVolumes = mounter.mountExports(parameterObjects);
-			for (File f : actualVolumes)
+			for (int i = 0; i < testIterationsCount; i++)
 			{
-				int expectedCount = calculateFileCount(f);
-				int actualCount = getFileCountFromPath(f.getAbsolutePath());
-				assertTrue(actualCount > 0);
-				assertEquals(expectedCount, actualCount);
+				// make sure the settings are the default
+				NfsMounterFactorySettings testMounterConfig = new NfsMounterFactorySettings(); 
+				NfsMounterFactory.setMounterConfig(testMounterConfig);
+				NfsMounter mounter = NfsMounterFactory.getMounter();
+				List<NfsMountExportParameter> parameterObjects = createValidParamObjects(i);
+				System.out.printf("test linuxMounter iteration %d\n", i);
+				
+				List<File> actualVolumes = mounter.mountExports(parameterObjects);
+				for (File f : actualVolumes)
+				{
+					assertTrue(f.exists());
+					int expectedCount = calculateFileCount(f);
+					int actualCount = getFileCountFromPath(f.getAbsolutePath());
+					assertTrue(actualCount > 0);
+					assertEquals(expectedCount, actualCount);
+				}
+				mounter.unMountAll();
+				for (int time = timeBetweenRuns; time > timeInfoIncrements; time -= timeInfoIncrements)
+				{
+					System.out.printf("waiting  %d seconds\n", time/1000);
+					try
+					{
+						Thread.sleep(timeInfoIncrements);
+					}
+					catch (InterruptedException e)
+					{
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
+			
 		}
 		else
 		{
@@ -98,16 +135,16 @@ public class nfs_mounter_IT
 	{
 		if (SystemUtils.IS_OS_LINUX)
 		{
-			String afsTemplatePath = tempFolder.newFolder("test_LinuxUnMounter").getAbsolutePath() + "/" + templateFileName;
-			new File(afsTemplatePath).createNewFile(); //ensure file exists
+			String afsTemplatePath = tempFolder.newFolder("test_LinuxUnMounter").getAbsolutePath() + "/"
+					+ templateFileName;
+			new File(afsTemplatePath).createNewFile(); // ensure file exists
 			
 			NfsMounterFactorySettings testMounterConfig = new NfsMounterFactorySettings();
 			testMounterConfig.linuxAutoFsTemplatePath = afsTemplatePath;
 			NfsMounterFactory.setMounterConfig(testMounterConfig);
 			NfsMounter mounter = NfsMounterFactory.getMounter();
 			
-			
-			List<NfsMountExportParameter> parameterObjects = createValidParamObjects();
+			List<NfsMountExportParameter> parameterObjects = createValidParamObjects(0);
 			int original = getFileLineCount(afsTemplatePath);
 			mounter.mountExports(parameterObjects);
 			int afterMount = getFileLineCount(afsTemplatePath);

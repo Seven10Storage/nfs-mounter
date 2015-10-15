@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -192,6 +193,15 @@ public class LinuxNfsMounter extends NfsMounter
 		Set<String> mountPointList = autoFsMgr.getAutoFsEntryList();
 		m_logger.debug(".isMounted(): testing mountPoint='%s'", mountPoint);
 		return MountPointListTransformer.isInList(mountPoint, mountPointList);
+		
+	}
+
+	@Override
+	public void unMountAll() throws IOException
+	{
+		Set<String> mountPointList = new HashSet<String>();
+		autoFsMgr.setAutoFsEntryList(mountPointList);
+		autoFsMgr.updateFile();
 		
 	}
 }
