@@ -28,21 +28,31 @@ import com.seven10.nfs_mounter.parameters.NfsMounterFactorySettings;
  */
 public class nfs_mounter_IT
 {
+	private static final String nfsExportDest = "/nfsExport/Dest";
+	private static final String nfsExportSrc = "/nfsExport/Src";
+	private static final String nfsHostAddress = "localhost";
 	private static final String templateFileName = "auto.template";
+	
 	@Rule
 	public TemporaryFolder tempFolder = new TemporaryFolder();
+	
 	private int testIterationsCount = 6;
 	private int timeBetweenRuns = 31 * 1000;
 	private int timeInfoIncrements = 10 * 1000;
 	
+	private String createMountSrc(int iteration)
+	{
+		return String.format("%s_sS_%d", nfsHostAddress, iteration);
+	}
+	private String createMountDest(int iteration)
+	{
+		return String.format("%s_sS_%d", nfsHostAddress, iteration);
+	}
 	private List<NfsMountExportParameter> createValidParamObjects(int iteration)
 	{
 		List<NfsMountExportParameter> rval = new ArrayList<NfsMountExportParameter>();
-		rval.add(new NfsMountExportParameter(String.format("nfs_test_%d", iteration), "192.168.21.60", "/ifs"));
-		rval.add(new NfsMountExportParameter(String.format("paat_sS_%d", iteration), "192.168.21.111",
-				"/home/mintserver1/Src"));
-		rval.add(new NfsMountExportParameter(String.format("paat_sD_%d", iteration), "192.168.21.111",
-				"/home/mintserver1/Dest"));
+		rval.add(new NfsMountExportParameter(createMountSrc(iteration), nfsHostAddress, nfsExportSrc));
+		rval.add(new NfsMountExportParameter(createMountDest(iteration), nfsHostAddress, nfsExportDest));
 		return rval;
 	}
 	
