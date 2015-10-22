@@ -126,8 +126,6 @@ public class AutoFsMgr
 	{
 		m_logger.debug(".updateFile(): opening file '%s' for update", autoFsTemplatePath);
 		
-		// TODO: Make this append rather than re-write the file every time
-		//FileWriter writer = new FileWriter(autoFsTemplatePath, false);
 		BufferedWriter writer = new BufferedWriter(new FileWriter(autoFsTemplatePath, false));
 		
 		m_logger.debug(".updateFile(): updating with '%d' lines", mountPointLines.size());
