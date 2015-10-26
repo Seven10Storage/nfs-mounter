@@ -45,7 +45,7 @@ public class LinuxNfsMounter extends NfsMounter
 	 *            
 	 * @return the array of file handles from the mounted exports.
 	 */
-	private List<File> getMountPointFileList(List<NfsMountExportParameter> parameterObjects)
+	private List<File> getMountPointFileList(List<NfsMountExportParameter> parameterObjects) throws IOException
 	{
 		List<File> rval = new ArrayList<File>();
 		for (NfsMountExportParameter parameter : parameterObjects)
@@ -64,8 +64,12 @@ public class LinuxNfsMounter extends NfsMounter
 			}
 			else
 			{
-				m_logger.warn(".getMountPointFileList(): mountPoint '%s' does not exists. Ignoring",
-						parameter.toString());
+				m_logger.error(".getMountPointFileList(): mountPoint '%s' does not exists. Ignoring",
+								parameter.toString());
+				
+				throw new IOException("Export: " + parameter.getLinuxExportName() + 
+									  " not mounted correctly at path: " + 
+									  parameter.getMountPoint());
 			}
 		}
 		return rval;
